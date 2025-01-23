@@ -1,10 +1,12 @@
 import { Doodle } from "../Model/Doodle.js";
+import { View } from "../View/View.js";
+
 // import { Platform } from "../Model/Platform";
 
 class Controller {
-    constructor(view){
+    constructor(){
         this.doodle = new Doodle(75, 75, 150, 35);
-        this.view = view;
+        this.view = new View();
 
         this.startTime = Date.now();
         this.lag = 0;
