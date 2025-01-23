@@ -1,10 +1,10 @@
-import { DoodleModel } from "../Model/Doodle";
-import { Platform } from "../Model/Platform";
+import { Doodle } from "../Model/Doodle.js";
+// import { Platform } from "../Model/Platform";
 
 class Controller {
-    constructor(){
-        this.doodle = new DoodleModel(75, 75, 150, 35);
-        // this._view = view;
+    constructor(view){
+        this.doodle = new Doodle(75, 75, 150, 35);
+        this.view = view;
 
         this.startTime = Date.now();
         this.lag = 0;
@@ -12,15 +12,20 @@ class Controller {
         this.frameDuration = 1000 / this.fps;
 
         this.doodle.bindDoodleDisplay(this.display.bind(this));
-        // this._view.BindSetDirection(this.SetDirection.bind(this));
+        this.view.BindSetDirection(this.setDirection.bind(this));
+        this.view.BindGetDirection(this.getDirection.bind(this));
     }
 
     display = (position) => {
-        // this._view.Display(position);
+        this.view.Display(position);
     }
 
     setDirection(newDirection) {
         this.doodle.direction = newDirection;
+    }
+
+    getDirection() {
+        return this.doodle.getDirection();
     }
     
     update() {
