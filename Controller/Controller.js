@@ -1,9 +1,9 @@
-import { Doodle } from "../Model/Doodle";
+import { DoodleModel } from "../Model/Doodle";
 import { Platform } from "../Model/Platform";
 
 class Controller {
     constructor(){
-        this.doodle = new Doodle(75, 75, 150, 35);
+        this.doodle = new DoodleModel(75, 75, 150, 35);
         // this._view = view;
 
         this.startTime = Date.now();
@@ -11,7 +11,7 @@ class Controller {
         this.fps = 60;
         this.frameDuration = 1000 / this.fps;
 
-        this.doodle.BindDisplay(this.display.bind(this));
+        this.doodle.bindDoodleDisplay(this.display.bind(this));
         // this._view.BindSetDirection(this.SetDirection.bind(this));
     }
 

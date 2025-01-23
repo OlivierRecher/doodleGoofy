@@ -19,7 +19,7 @@ class Doodle extends GameObject{
         return this.direction = value; 
     }
 
-    BindDoodleDisplay(callback) {
+    bindDoodleDisplay(callback) {
         this.b_Display = callback;
     }
 
