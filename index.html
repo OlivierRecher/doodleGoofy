@@ -3,133 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouvement</title>
+     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <canvas id="my_canvas" width="110" height="110" style="border: 1px solid red"></canvas>
+    <canvas id="my_canvas" width="310" height="510"></canvas>
 
-    <script>
-        let _startTime     = Date.now();
-        let _lag           = 0;
-        let _fps           = 60; // Frame rate.
-        let _frameDuration = 1000 / _fps; // Avec 60 frame par seconde, la frame va durer 16.7ms.
-        let _position      = {x: 0, y:0};
+    <script type="module">
+        import { doodleLeft, doodleRight } from './View/doodle.js';
+        class Model {
+            static GRAVITY    = 20;
+            static JUMP_FORCE = 900;
+            static SPEED      = 200;
 
-        let _gravitySpeed = 0;
-        let _gravity = 20;
-        let _jumpForce = 500;
+            constructor() {
+                this._direction = 0;                
+                this._gravitySpeed = 0;
+                this._position = {x: 0, y:0};
+            }
 
-        let _hold_right = false;
-        let _hold_left = false;
-        let _direction = 0;
-        let _speed     = 200;
+            get position() { return this._position; }
 
-        /*
-            Nous appelons la méthode de déplacement selon un taux de rafraichissement donné (disons 60fps).
-            Nous modulons notre vitesse pour qu'elle corresponde au nombre de cellules de notre grille parcourues par seconde (dépendant des fps indiquées).
-            Si nous voulons qu'une cellule soit parcourue en 1 seconde alors le cube doit se déplacer de (1 / 60)% de la case par frame (si 60fps).
-            Lorsque le taux de rafraîchissement est diminué à 30fps alors la boucle while empêche l'exécution d'une frame sur 2 environ car le deltaTime est toujours identique à 16ms (dépendant de la fonction requestAnimationFrame).
-            A l'inverse si le taux est plus élevé, par exemple à 90fps, alors la durée d'une frame sera de 11ms. Le deltaTime sera toujours de 16ms et nous accumulerons un retard de 5ms par appel. Ainsi, toutes les 3 frames environ, il y aura une régularisation à l'aide de la boucle while.
-        */
-
-        document.addEventListener('keydown', (evt) => {
-            console.log(evt.key);
+            get direction() { return this._direction; }
+            set direction(value) { return this._direction = value; }
             
-            if (evt.key == 'ArrowLeft' || evt.key == 'ArrowRight') {
-                switch (evt.key) {
-                    case 'ArrowLeft': // Move left.
-                        _hold_left = true;
-                        _direction = -1;
-                        break;
-                    case 'ArrowRight': // Move right.
-                        _hold_right = true;
-                        _direction = 1;
-                        break;
+            BindDisplay(callback) {
+                this.b_Display = callback;
+            }
+
+            Move(fps) {
+                this._gravitySpeed += Model.GRAVITY;
+                this._position.y += this._gravitySpeed / fps;
+                this._position.x += this._direction * Model.SPEED / fps;
+
+                if (this._position.y > 430) {
+                    this._Jump();
                 }
-            }
-        });
 
-        document.addEventListener('keyup', (evt) => {
-            switch (evt.key) {
-                case 'ArrowLeft': // Move left.
-                    if (!_hold_right) {
-                        _direction = 0;
+                this.b_Display(this._position);
+            }
+
+            _Jump() {
+                this._gravitySpeed = -Model.JUMP_FORCE;
+            }
+        }
+
+        class View {
+            constructor() {
+                this._canvas = document.getElementById('my_canvas');
+                this.ctx     = this._canvas.getContext('2d');
+                this._hold_right = false;
+                this._hold_left = false;
+
+                this.Events();
+            }
+
+            BindSetDirection(callback) {
+                this.b_SetDirection = callback;
+            }
+
+            Events() {
+                document.addEventListener('keydown', (evt) => {                
+                    if (evt.key == 'ArrowLeft' || evt.key == 'ArrowRight') {
+                        switch (evt.key) {
+                            case 'ArrowLeft': // Move left.
+                                this._hold_left = true;
+                                this.b_SetDirection(-1);
+                                break;
+                            case 'ArrowRight': // Move right.
+                                this._hold_right = true;
+                                this.b_SetDirection(1);
+                                break;
+                        }
                     }
-                    _hold_left = false;
-                    break;
-                case 'ArrowRight': // Move right.
-                    if (!_hold_left) {
-                        _direction = 0;
+                });
+
+                document.addEventListener('keyup', (evt) => {
+                    switch (evt.key) {
+                        case 'ArrowLeft': // Move left.
+                            if (!this._hold_right) {
+                                this.b_SetDirection(0);
+                            }
+                            this._hold_left = false;
+                            break;
+                        case 'ArrowRight': // Move right.
+                            if (!this._hold_left) {
+                                this.b_SetDirection(0);
+                            }
+                            this._hold_right = false;
+                            break;
                     }
-                    _hold_right = false;
-                    break;
-            }
-        });
-
-        /**
-         * Déplacement de notre cube au sein du canvas.
-         */
-        let Move = function() {
-            _gravitySpeed += _gravity;
-            _position.y += _gravitySpeed / _fps;
-            _position.x += _direction * _speed / _fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
-        }
-
-        let Jump = function() {
-            _gravitySpeed = -_jumpForce;
-        }
-
-        /**
-         * Afficher le canvas et le mouvement du carré.
-         */
-        let Display = function() {
-            let x = _position.x;
-            let y = _position.y;
-            let canvas = document.getElementById('my_canvas');
-            let ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dessiner les lignes.
-            ctx.beginPath(); // Nouveau tracé.
-            ctx.moveTo(100, 0); // Déplacement du crayon en (100, 0).
-            ctx.lineTo(100, 100); // Dessiner la ligne en (150, 100).
-            ctx.stroke(); // Afficher la ligne.
-            ctx.beginPath(); // Nouveau tracé.
-            ctx.moveTo(0, 100); // Déplacement du crayon en (100, 0).
-            ctx.lineTo(100, 100); // Dessiner la ligne en (150, 100).
-            ctx.stroke(); // Afficher la ligne.
-            
-            // Dessiner un rectangle plein.
-            ctx.fillRect(x, y, 10, 10);
-        }
-
-        /**
-         * Actualisation du canvas selon un fps donné.
-         */
-        let Update = function() {
-            /* Calcul du deltaTime */
-            let currentTime = Date.now();
-            let deltaTime   = currentTime - _startTime; // La durée entre deux appels (entre 2 frames).
-            _lag += deltaTime;
-            _startTime = currentTime;
-
-            /* Mettre à jour la logique si la variable _lag est supérieure ou égale à la durée d'une frame */
-            while (_lag >= _frameDuration) {
-                /* Mise à jour de la logique et de la vue */
-                Move();
-                Display();
-                /* Réduire la variable _lag par la durée d'une frame */
-                _lag -= _frameDuration;
+                });
             }
 
-            if (_position.y > 100) {
-                Jump();
+            Display(position) {
+                let x = position.x;
+                let y = position.y;
+                this.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+
+                let doodle = this._direction == 1 ? doodleRight : doodleLeft;
+                this.ctx.drawImage(doodle, x, y, 75, 75);
+            }
+        }
+
+        class Controller {
+            constructor(model, view) {
+                this._model = model;
+                this._view = view;
+                
+                this._startTime     = Date.now();
+                this._lag           = 0;
+                this._fps           = 60; // Frame rate.
+                this._frameDuration = 1000 / this._fps; // Avec 60 frame par seconde, la frame va durer 16.7ms.
+
+                this._model.BindDisplay(this.Display.bind(this));
+                this._view.BindSetDirection(this.SetDirection.bind(this));
+            }
+
+            Display(position) {
+                this._view.Display(position);
+            }
+
+            SetDirection(newDirection) {
+                this._model.direction = newDirection;
             }
             
-            requestAnimationFrame(Update); // La fonction de rappel est généralement appelée 60 fois par seconde.
+            Update() {
+                /* Calcul du deltaTime */
+                let currentTime = Date.now();
+                let deltaTime   = currentTime - this._startTime; // La durée entre deux appels (entre 2 frames).
+                
+                this._lag += deltaTime;
+                this._startTime = currentTime;
+
+                /* Mettre à jour la logique si la variable _lag est supérieure ou égale à la durée d'une frame */
+                while (this._lag >= this._frameDuration) {
+                    /* Mise à jour de la logique */
+                    this._model.Move(this._fps);
+                    /* Réduire la variable _lag par la durée d'une frame */
+                    this._lag -= this._frameDuration;
+                }
+                
+                requestAnimationFrame(this.Update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
+            }
         }
 
-        Update();
+        const app = new Controller(new Model(), new View());
+        app.Update();
     </script>
     
 </body>
