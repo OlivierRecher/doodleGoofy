@@ -4,12 +4,13 @@ class Doodle extends GameObject {
   static GRAVITY = 20;
   static JUMP_FORCE = 750;
   static SPEED = 200;
+  static MAX_JUMP_HEIGHT = 200;
 
   constructor(_width, _height, _x, _y) {
     super(_width, _height, _x, _y);
     this.direction = 0;
     this.gravitySpeed = 0;
-    this.jumpValue = _y+_height
+    this.jumpValue = _y;
   }
 
   getPosition = () => {
@@ -35,17 +36,25 @@ class Doodle extends GameObject {
     this.gravitySpeed += Doodle.GRAVITY;
     
     this.position.x += (this.direction * Doodle.SPEED) / fps;
-    if(this.position.x+this.width < 0) this.position.x = canvaWidth
-    else if(this.position.x > canvaWidth) this.position.x = -this.width
+    if(this.position.x+this.width < 0) this.position.x = canvaWidth;
+    else if(this.position.x > canvaWidth) this.position.x = -this.width;
     
     this.position.y += this.gravitySpeed / fps;
+    let diff = Doodle.MAX_JUMP_HEIGHT - this.position.y;
+    
+    if(diff > 0) {
+      this.position.y += diff;
+    }
 
-    let base = canvaHeight
+    let base = canvaHeight;
 
     for(let i = 0; i < platforms.length; i++){
-      let platform = platforms[i]
+      let platform = platforms[i];
+
+      if(diff > 0) platform.setY(platform.getY() + diff)
+
       if(Math.max(this.position.x+20, platform.getX()) < Math.min(this.position.x+this.width-20, platform.getX()+platform.getWidth())
-      && (this.position.y+this.height) < platform.getY()+platform.getHeight() && falling){
+      && (this.position.y+this.height) < platform.getY()+platform.getHeight() && falling && (this.position.y+this.height) < base){
         base = platform.getY();
       }
     }

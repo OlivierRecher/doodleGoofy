@@ -1,13 +1,19 @@
 import { Doodle } from "./Doodle.js";
 import { Platform } from "./Platform.js";
 
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
 class Model{
     constructor(){
         this.doodle = new Doodle(75, 75, 150, 435); 
         this.platforms = [];
+        let canvaHeight = 510;
+        let canvaWidth = 310;
 
-        for(let i = 0; i < 8; i++){
-            this.platforms.push(new Platform(57, 15, 100*(i+1), 200*(i+1), 1))
+        for(let i = 0; i < 20; i++){
+            this.platforms.push(new Platform(57, 15, getRandomInt(canvaWidth-57), canvaHeight - (200*i), getRandomInt(3)))
         }
     }
 
