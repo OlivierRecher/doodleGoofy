@@ -1,24 +1,29 @@
 import { doodleLeft, doodleRight } from "./DoodleView.js";
 
+(function() {
+  
+})();
+
 class View {
-  constructor() {
+  constructor(_assets) {
     this._canvas = document.getElementById("my_canvas");
     this.ctx = this._canvas.getContext("2d");
     this._hold_right = false;
     this._hold_left = false;
+    this.assets = _assets
 
-    this.Events();
+    this.events();
   }
 
-  BindSetDirection(callback) {
+  bindSetDirection(callback) {
     this.b_SetDirection = callback;
   }
 
-  BindGetDirection(callback) {
+  bindGetDirection(callback) {
     this.b_GetDirection = callback;
   }
 
-  Events() {
+  events() {
     document.addEventListener("keydown", (evt) => {
       if (evt.key == "ArrowLeft" || evt.key == "ArrowRight") {
         switch (evt.key) {
@@ -59,6 +64,22 @@ class View {
 
     let doodle = this.b_GetDirection() == 1 ? doodleRight : doodleLeft;
     this.ctx.drawImage(doodle, x, y, 75, 75);
+  }
+
+  platformDisplay(type, position){
+    let x = position.x;
+    let y = position.y;
+    switch (type){
+      case 0 :
+        this.ctx.drawImage(this.assets, 1, 1, 57, 15, x, y, 57, 15)
+        break
+      case 1 : 
+        this.ctx.drawImage(this.assets, 1, 19, 57, 15, x, y, 57, 15)
+        break
+      case 2 : 
+        this.ctx.drawImage(this.assets, 1, 55, 57, 15, x, y, 57, 15)
+        break
+    }
   }
 }
 

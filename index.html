@@ -11,8 +11,17 @@
     <script type="module">
         import { Controller } from './Controller/Controller.js';
 
-        const app = new Controller();
-        app.update();
+        (function() {
+            const HEXTILES_IMAGE = new Image();
+            HEXTILES_IMAGE.src = 'assets/game-tiles.png';
+            Promise.all([
+                new Promise( (resolve) => {HEXTILES_IMAGE.addEventListener('load', () => { resolve();}); })
+            ])
+            .then(() => {
+                const app = new Controller(HEXTILES_IMAGE);
+                app.update();
+            });
+        })();
     </script>
     
 </body>
