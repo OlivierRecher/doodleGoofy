@@ -32,7 +32,7 @@ class Platform extends GameObject {
   }
 
   display(cb) {
-    cb(this.type, this.position);
+    if(cb) cb(this.type, this.position);
   }
 
   move(cb) {

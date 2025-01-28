@@ -56,7 +56,7 @@ class Model{
     }
 
     bindDisplay(callback) {
-        this.doodleDisplay = callback;
+        this.display = callback;
     }
 
     bindPlatformDisplay(callback){
@@ -73,7 +73,7 @@ class Model{
     }
 
     update(fps){
-        this.doodle.move(fps, this.platforms, this.doodleDisplay);
+        this.doodle.move(fps, this.platforms, this.display);
         for (let i = 0; i < this.platforms.length; i++){
             let platform = this.platforms[i];
             if (platform.direction === 1 && platform.position.x > Canva.WIDTH - platform.width) {
@@ -83,11 +83,11 @@ class Model{
             }
             platform.display(this.platformDisplay)
             if (platform.type === 1) {
-                platform.move(this.doodleDisplay);
+                platform.move(this.display);
             }
         }
         
-        this.scoreDisplay(this.score)
+        if(this.scoreDisplay) this.scoreDisplay(this.score)
     }
 }
 

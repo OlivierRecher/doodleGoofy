@@ -93,7 +93,7 @@ class Doodle extends GameObject {
       }
     }
 
-    cb(this.position);
+    if(cb) cb(this.position);
   };
 
   jump() {
