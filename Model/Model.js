@@ -54,7 +54,6 @@ class Model {
   getNeighbors(){
     let results = {};
     const doodleCenter = this.doodle.getCenter()
-    console.log(doodleCenter)
     let platformsDisplayed = this.platforms.filter((p) => p.getCenter().y > 0 && p.getCenter().y < Canva.HEIGHT && p.getCenter().x > 0 && p.getCenter().x < Canva.WIDTH);
     for(let i = 0; i < platformsDisplayed.length; i++){
       const platform = platformsDisplayed[i];
