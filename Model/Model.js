@@ -119,7 +119,7 @@ class Model {
     this.platforms.splice(index, 1);
   }
 
-  update(fps) {
+  async update(fps) {
     this.doodle.move(fps, this.platforms, this.display);
 
     for (let i = 0; i < this.platforms.length; i++) {
@@ -153,6 +153,7 @@ class Model {
         this.doodle.position.x,
         this.doodle.position.y,
       );
+      await bot.loadData();
       let direction = bot.autopilot();
       this.setDirection(direction);
     }
