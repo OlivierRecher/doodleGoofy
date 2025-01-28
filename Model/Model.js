@@ -20,6 +20,7 @@ class Model{
         this.doodle.bindAddScore(this.addScore.bind(this));
         this.doodle.bindGetScore(this.getScore.bind(this));
         this.doodle.bindGameOver(this.gameOver.bind(this));
+        this.doodle.bindRemovePlatform(this.removePlatform.bind(this));
     }
 
     createPlatforms(){
@@ -68,6 +69,11 @@ class Model{
         this.scoreDisplay = callback
     }
 
+    removePlatform(platform) {
+        let index = this.platforms.indexOf(platform);
+        this.platforms.splice(index, 1);
+    }
+
     update(fps){
         this.doodle.move(fps, this.platforms, this.doodleDisplay);
         for (let i = 0; i < this.platforms.length; i++){
@@ -79,9 +85,7 @@ class Model{
             }
             platform.display(this.platformDisplay)
             if (platform.type === 1) {
-                platform.move(
-                  this.doodleDisplay,
-                );
+                platform.move(this.doodleDisplay);
             }
         }
         

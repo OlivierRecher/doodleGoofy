@@ -40,6 +40,10 @@ class Doodle extends GameObject {
     this.gameOver = callback;
   }
 
+  bindRemovePlatform(callback) {
+    this.removePlatform = callback;
+  }
+
   move = (fps, platforms, cb) => {
     let canvaWidth = 310
     let canvaHeight = 510
@@ -59,6 +63,7 @@ class Doodle extends GameObject {
     }
 
     let base = canvaHeight;
+    let platformHitted = null;
 
     for(let i = 0; i < platforms.length; i++){
       let platform = platforms[i];
@@ -68,12 +73,19 @@ class Doodle extends GameObject {
       if((Math.max(this.position.x+20, platform.getX()) < Math.min(this.position.x+this.width-20, platform.getX()+platform.getWidth()))
       && ((this.position.y+this.height) < (platform.getY()+platform.getHeight())) && falling && ((this.position.y+this.height) < base)){
         base = platform.getY();
+        platformHitted = platform;  
       }
     }
 
     if (this.position.y + this.height > base) {
-      if(base === canvaHeight && this.getScore && this.getScore() > 0) this.gameOver() 
-      else this.jump();
+        if (base === canvaHeight && this.getScore && this.getScore() > 0) {
+            this.gameOver();
+            return;
+        }
+      this.jump();
+      if (platformHitted && platformHitted.type === 2) {
+        this.removePlatform(platformHitted);
+      }
     }
 
     cb(this.position);
