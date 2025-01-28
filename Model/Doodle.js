@@ -43,7 +43,7 @@ class Doodle extends GameObject {
   move = (fps, platforms, cb) => {
     let canvaWidth = 310
     let canvaHeight = 510
-    let falling = this.gravitySpeed > 40
+    let falling = this.gravitySpeed > 60
     this.gravitySpeed += Doodle.GRAVITY;
     
     this.position.x += (this.direction * Doodle.SPEED) / fps;

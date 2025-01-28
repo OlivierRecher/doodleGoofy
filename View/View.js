@@ -63,6 +63,7 @@ class View {
     this.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
     let doodle = this.b_GetDirection() == 1 ? doodleRight : doodleLeft;
+    this.ctx.globalCompositeOperation='destination-over';
     this.ctx.drawImage(doodle, x, y, 75, 75);
   }
 
