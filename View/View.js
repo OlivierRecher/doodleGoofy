@@ -81,6 +81,11 @@ class View {
         break
     }
   }
+
+  scoreDisplay(_score){
+    this.ctx.font = "24px serif";
+    this.ctx.fillText(_score, 20, 30);
+  }
 }
 
 export { View };

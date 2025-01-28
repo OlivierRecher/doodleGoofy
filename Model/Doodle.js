@@ -2,15 +2,14 @@ import { GameObject } from "./GameObject.js";
 
 class Doodle extends GameObject {
   static GRAVITY = 20;
-  static JUMP_FORCE = 750;
-  static SPEED = 200;
+  static JUMP_FORCE = 720;
+  static SPEED = 300;
   static MAX_JUMP_HEIGHT = 200;
 
   constructor(_width, _height, _x, _y) {
     super(_width, _height, _x, _y);
     this.direction = 0;
     this.gravitySpeed = 0;
-    this.jumpValue = _y;
   }
 
   getPosition = () => {
@@ -29,10 +28,22 @@ class Doodle extends GameObject {
     this.b_Display = callback;
   }
 
+  bindAddScore(callback){
+    this.addScore = callback;
+  }
+
+  bindGetScore(callback){
+    this.getScore = callback
+  }
+
+  bindGameOver(callback){
+    this.gameOver = callback;
+  }
+
   move = (fps, platforms, cb) => {
     let canvaWidth = 310
     let canvaHeight = 510
-    let falling = this.position.y < this.gravitySpeed
+    let falling = this.gravitySpeed > 40
     this.gravitySpeed += Doodle.GRAVITY;
     
     this.position.x += (this.direction * Doodle.SPEED) / fps;
@@ -44,6 +55,7 @@ class Doodle extends GameObject {
     
     if(diff > 0) {
       this.position.y += diff;
+      this.addScore(Math.round(diff))
     }
 
     let base = canvaHeight;
@@ -53,14 +65,15 @@ class Doodle extends GameObject {
 
       if(diff > 0) platform.setY(platform.getY() + diff)
 
-      if(Math.max(this.position.x+20, platform.getX()) < Math.min(this.position.x+this.width-20, platform.getX()+platform.getWidth())
-      && (this.position.y+this.height) < platform.getY()+platform.getHeight() && falling && (this.position.y+this.height) < base){
+      if((Math.max(this.position.x+20, platform.getX()) < Math.min(this.position.x+this.width-20, platform.getX()+platform.getWidth()))
+      && ((this.position.y+this.height) < (platform.getY()+platform.getHeight())) && falling && ((this.position.y+this.height) < base)){
         base = platform.getY();
       }
     }
 
     if (this.position.y + this.height > base) {
-      this.jump();
+      if(base === canvaHeight && this.getScore && this.getScore() > 0) this.gameOver() 
+      else this.jump();
     }
 
     cb(this.position);

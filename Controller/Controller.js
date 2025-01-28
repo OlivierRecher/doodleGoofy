@@ -15,6 +15,7 @@ class Controller {
 
         this.model.bindDisplay(this.display.bind(this));
         this.model.bindPlatformDisplay(this.platformDisplay.bind(this));
+        this.model.bindScoreDisplay(this.scoreDisplay.bind(this));
         this.view.bindSetDirection(this.setDirection.bind(this));
         this.view.bindGetDirection(this.getDirection.bind(this));
     }
@@ -25,6 +26,10 @@ class Controller {
 
     platformDisplay = (type, position) => {
         this.view.platformDisplay(type, position);
+    }
+
+    scoreDisplay = (_score) => {
+        this.view.scoreDisplay(_score);
     }
 
     setDirection(newDirection) {
