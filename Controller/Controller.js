@@ -1,5 +1,6 @@
 import { Model } from "../Model/Model.js";
 import { View } from "../View/View.js";
+import { ViewAi } from "../View/ViewAi.js";
 
 class Controller {
   constructor(_assets) {
