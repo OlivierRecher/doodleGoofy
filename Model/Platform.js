@@ -7,26 +7,6 @@ class Platform extends GameObject {
     this.direction = 1;
   }
 
-  getPosition() {
-    return this.position;
-  }
-
-  getX() {
-    return this.position.x;
-  }
-
-  getY() {
-    return this.position.y;
-  }
-
-  getWidth() {
-    return this.width;
-  }
-
-  getHeight() {
-    return this.height;
-  }
-
   setY(_y) {
     this.position.y = _y;
   }

@@ -22,6 +22,10 @@ class View {
     this.b_GetDirection = callback;
   }
 
+  bindGetNeighbors(callback){
+    this.getNeighbors = callback
+  }
+
   events() {
     document.addEventListener("keydown", (evt) => {
       if (evt.key == "ArrowLeft" || evt.key == "ArrowRight") {
@@ -64,6 +68,15 @@ class View {
     let doodle = this.b_GetDirection() == 1 ? doodleRight : doodleLeft;
     this.ctx.globalCompositeOperation='destination-over';
     this.ctx.drawImage(doodle, x, y, 75, 75);
+
+    let neighbors = this.getNeighbors()
+    console.log(neighbors)
+    for(let i = 0; i < neighbors.length; i++){
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+      this.ctx.lineTo(neighbors[i].position.x, neighbors[i].position.y);
+      this.ctx.stroke();
+    }
   }
 
   platformDisplay(type, position){
