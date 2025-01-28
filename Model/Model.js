@@ -7,11 +7,8 @@ function getRandomInt(max) {
 }
 
 class Model{
-    static canvaHeight = 510;
-    static canvaWidth = 310;
-
     constructor(){
-        this.doodle = new Doodle(75, 75, 150, 435); 
+        this.doodle = new Doodle(75, 75, Canva.WIDTH/2 - 37, Canva.HEIGHT-75); 
         this.platforms = [];
         this.score = 0;
         
@@ -28,7 +25,7 @@ class Model{
         for(let i = 1; i < 7; i+= 0.25){
             for(let j = 0; j < 10*i; j++){
                 let rand = getRandomInt(10)
-                this.platforms.push(new Platform(57, 15, getRandomInt(Model.canvaWidth-57), Model.canvaHeight - (lastHeight + 30*i), rand===9 ? 2 : rand === 8 ? 1 : 0))
+                this.platforms.push(new Platform(57, 15, getRandomInt(Canva.WIDTH-57), Canva.HEIGHT - (lastHeight + 30*i), rand===9 ? 2 : rand === 8 ? 1 : 0))
                 lastHeight += 30*i
             }
         }
@@ -52,6 +49,7 @@ class Model{
 
     gameOver(){
         console.log('Game Over')
+        this.doodle.setPosition(Canva.WIDTH/2 - 37, Canva.HEIGHT-75)
         this.score = 0
         this.platforms = [];
         this.createPlatforms()

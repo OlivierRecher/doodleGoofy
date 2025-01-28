@@ -1,12 +1,11 @@
+import { Canva } from "../Model/Canva.js";
 import { doodleLeft, doodleRight } from "./DoodleView.js";
-
-(function() {
-  
-})();
 
 class View {
   constructor(_assets) {
     this._canvas = document.getElementById("my_canvas");
+    this._canvas.width = Canva.WIDTH
+    this._canvas.height = Canva.HEIGHT
     this.ctx = this._canvas.getContext("2d");
     this._hold_right = false;
     this._hold_left = false;

@@ -1,4 +1,5 @@
 import { GameObject } from "./GameObject.js";
+import { Canva } from "./Canva.js";
 
 class Doodle extends GameObject {
   static GRAVITY = 20;
@@ -24,6 +25,10 @@ class Doodle extends GameObject {
     this.direction = value;
   };
 
+  setPosition = (_x, _y) => {
+    this.position = {x:_x, y:_y}; 
+  }
+
   bindDoodleDisplay(callback) {
     this.b_Display = callback;
   }
@@ -45,8 +50,8 @@ class Doodle extends GameObject {
   }
 
   move = (fps, platforms, cb) => {
-    let canvaWidth = 310
-    let canvaHeight = 510
+    let canvaWidth = Canva.WIDTH
+    let canvaHeight = Canva.HEIGHT
     let falling = this.gravitySpeed > 60
     this.gravitySpeed += Doodle.GRAVITY;
     
