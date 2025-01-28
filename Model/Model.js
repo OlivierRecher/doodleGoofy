@@ -51,23 +51,32 @@ class Model {
     this.doodle.setDirection(newDirection);
   }
 
-    getNeighbors(){
-        let results = [];
-        const doodleCenter = this.doodle.getCenter();
-        let platformsDisplayed = this.platforms.filter((p) => p.getY() > 0 && p.getY() < Canva.HEIGHT && p.getX() > 0 && p.getX() < Canva.WIDTH)
-        for(let i = 0; i < platformsDisplayed.length; i++){
-            let platform = platformsDisplayed[i];
-            const platformCenter = platform.getCenter()
-            let distance = Math.sqrt(Math.pow(doodleCenter.x - platformCenter.x, 2) + Math.pow(doodleCenter.y - platformCenter.y, 2))
-            if(results.length === 4){
-                const maxDistanceIndex = results.findIndex((r) => r.distance === Math.max(...results.map((r) => r.distance)));
-                if (results[maxDistanceIndex].distance > distance) {
-                    results[maxDistanceIndex] = { distance, position: platformCenter};
-                }
-            }else results.push({distance:distance, position:platformCenter})
-        }
-        return results.sort((a, b) => a.distance - b.distance);
+  getNeighbors(){
+    let results = {};
+    const doodleCenter = this.doodle.getCenter()
+    let platformsDisplayed = this.platforms.filter((p) => p.getY() > 0 && p.getY() < Canva.HEIGHT && p.getX() > 0 && p.getX() < Canva.WIDTH);
+    for(let i = 0; i < platformsDisplayed.length; i++){
+      const platform = platformsDisplayed[i];
+      const platformCenter = platform.getCenter()
+      const distance = Math.sqrt(Math.pow(platformCenter.x - doodleCenter.x, 2) + Math.pow(platformCenter.y - doodleCenter.y, 2))
+      if(platformCenter.x < doodleCenter.x && platformCenter.y < doodleCenter.y){
+        if((results.topLeft && results.topLeft.distance > distance) || !results.topLeft) results.topLeft = {distance : distance, position:platformCenter}
+      }else if(platformCenter.x > doodleCenter.x && platformCenter.y < doodleCenter.y){
+        if((results.topRight && results.topRight.distance > distance) || !results.topRight) results.topRight = {distance : distance, position:platformCenter}
+      }else if(platformCenter.x < doodleCenter.x && platformCenter.y > doodleCenter.y){
+        if((results.bottomLeft && results.bottomLeft.distance > distance) || !results.bottomLeft) results.bottomLeft = {distance : distance, position:platformCenter}
+      }else if(platformCenter.x > doodleCenter.x && platformCenter.y > doodleCenter.y){
+        if((results.bottomRight && results.bottomRight.distance > distance) || !results.bottomRight) results.bottomRight = {distance : distance, position:platformCenter}
+      }
     }
+
+    if(!results.topLeft) results.topLeft = -1
+    if(!results.topRight) results.topRight = -1
+    if(!results.bottomLeft) results.bottomLeft = -1
+    if(!results.bottomRight) results.bottomRight = -1
+    
+    return Object.keys(results).map(r => results[r])
+  }
 
     // getNeighbors() {
     //     const results = [];

@@ -68,11 +68,14 @@ class View {
     let neighbors = this.getNeighbors()
     let colors = ['red', 'yellow', 'blue', 'green']
     for(let i = 0; i < neighbors.length; i++){
-      this.ctx.beginPath();
-      this.ctx.moveTo(x+35, y+35);
-      this.ctx.lineTo(neighbors[i].position.x, neighbors[i].position.y);
-      this.ctx.strokeStyle = colors[i];
-      this.ctx.stroke();
+      if(neighbors[i].distance > 0){
+        this.ctx.beginPath();
+        this.ctx.moveTo(x+35, y+35);
+        this.ctx.lineTo(neighbors[i].position.x, neighbors[i].position.y);
+        this.ctx.strokeStyle = colors[i];
+        this.ctx.stroke();
+      }
+      
     }
 
     let doodle = this.b_GetDirection() == 1 ? doodleRight : doodleLeft;
