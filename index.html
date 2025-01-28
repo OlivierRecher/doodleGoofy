@@ -6,10 +6,15 @@
      <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <canvas id="my_canvas" width="310" height="510"></canvas>
+    <canvas id="my_canvas"></canvas>
 
     <script type="module">
         import { Controller } from './Controller/Controller.js';
+        import { Canva } from './Model/Canva.js';
+
+        const canvas = document.getElementById('my_canvas');
+        canvas.width = Canva.WIDTH;
+        canvas.height = Canva.HEIGHT;
 
         (function() {
             const HEXTILES_IMAGE = new Image();

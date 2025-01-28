@@ -1,5 +1,6 @@
 import { Doodle } from "./Doodle.js";
 import { Platform } from "./Platform.js";
+import { Canva } from "./Canva.js";
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -69,9 +70,19 @@ class Model{
 
     update(fps){
         this.doodle.move(fps, this.platforms, this.doodleDisplay);
-        
-        for(let i = 0; i < this.platforms.length; i++){
-            this.platforms[i].display(this.platformDisplay)
+        for (let i = 0; i < this.platforms.length; i++){
+            let platform = this.platforms[i];
+            if (platform.direction === 1 && platform.position.x > Canva.WIDTH - platform.width) {
+                platform.direction = -1;
+            } else if (platform.direction === -1 && platform.position.x < 0) {
+                platform.direction = 1;
+            }
+            platform.display(this.platformDisplay)
+            if (platform.type === 1) {
+                platform.move(
+                  this.doodleDisplay,
+                );
+            }
         }
         
         this.scoreDisplay(this.score)
