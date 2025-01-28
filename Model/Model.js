@@ -169,7 +169,15 @@ class Model {
     }
 
     if (this.isAutopilot()) {
-      const bot = new NeuralNetwork(0.9, 0.85, 0.6, 0.1, 0.6, 0.45);
+      let neighbors = this.getNeighbors();
+      const bot = new NeuralNetwork(
+        neighbors[0].distance / Canva.WIDTH,
+        neighbors[1].distance / Canva.WIDTH,
+        neighbors[2].distance / Canva.WIDTH,
+        neighbors[3].distance / Canva.WIDTH,
+        this.doodle.position.x,
+        this.doodle.position.y,
+      );
       let direction = bot.autopilot();
       this.setDirection(direction);
     }
