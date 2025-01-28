@@ -12,11 +12,7 @@ class Doodle extends GameObject {
     this.direction = 0;
     this.gravitySpeed = 0;
   }
-
-  getCenter = () => {
-    return {x:(this.position.x + this.width)/2, y:(this.position.y + this.height)/2}
-  }
-
+  
   getDirection = () => {
     return this.direction;
   };

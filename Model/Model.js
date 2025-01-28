@@ -54,7 +54,8 @@ class Model {
   getNeighbors(){
     let results = {};
     const doodleCenter = this.doodle.getCenter()
-    let platformsDisplayed = this.platforms.filter((p) => p.getY() > 0 && p.getY() < Canva.HEIGHT && p.getX() > 0 && p.getX() < Canva.WIDTH);
+    console.log(doodleCenter)
+    let platformsDisplayed = this.platforms.filter((p) => p.getCenter().y > 0 && p.getCenter().y < Canva.HEIGHT && p.getCenter().x > 0 && p.getCenter().x < Canva.WIDTH);
     for(let i = 0; i < platformsDisplayed.length; i++){
       const platform = platformsDisplayed[i];
       const platformCenter = platform.getCenter()
@@ -70,51 +71,14 @@ class Model {
       }
     }
 
-    if(!results.topLeft) results.topLeft = -1
-    if(!results.topRight) results.topRight = -1
-    if(!results.bottomLeft) results.bottomLeft = -1
-    if(!results.bottomRight) results.bottomRight = -1
+    if(!results.topLeft) results.topLeft = {distance : -1, position:{x:-1, y:-1}}
+    if(!results.topRight) results.topRight = {distance : -1, position:{x:-1, y:-1}}
+    if(!results.bottomLeft) results.bottomLeft = {distance : -1, position:{x:-1, y:-1}}
+    if(!results.bottomRight) results.bottomRight = {distance : -1, position:{x:-1, y:-1}}
     
     return Object.keys(results).map(r => results[r])
   }
 
-    // getNeighbors() {
-    //     const results = [];
-    //     // Filtrer les plateformes affichées dans les limites du canvas
-    //     const platformsDisplayed = this.platforms.filter(
-    //         (p) =>
-    //             p.getY() > 0 &&
-    //             p.getY() < Canva.HEIGHT &&
-    //             p.getX() > 0 &&
-    //             p.getX() < Canva.WIDTH
-    //     );
-    
-    //     for (const platform of platformsDisplayed) {
-    //         const platformCenter = platform.getCenter();
-    //         const doodleCenter = this.doodle.getCenter();
-    //         const distance = Math.sqrt(
-    //             Math.pow(doodleCenter.x - platformCenter.x, 2) +
-    //             Math.pow(doodleCenter.y - platformCenter.y, 2)
-    //         );
-    
-    //         // Si nous avons déjà 4 résultats, vérifier s'il faut remplacer le plus éloigné
-    //         if (results.length === 4) {
-    //             const maxDistanceIndex = results.findIndex(
-    //                 (r) => r.distance === Math.max(...results.map((r) => r.distance))
-    //             );
-    //             if (results[maxDistanceIndex].distance > distance) {
-    //                 results[maxDistanceIndex] = { distance, position: platformCenter };
-    //             }
-    //         } else {
-    //             // Ajouter directement si moins de 4 résultats
-    //             results.push({ distance, position: platformCenter });
-    //         }
-    //     }
-    
-    //     // Retourner les résultats triés par distance croissante
-    //     return results.sort((a, b) => a.distance - b.distance);
-    // }
-    
   toggleAutopilot(toggle) {
     this.autopilot = toggle;
     this.setDirection(0);
