@@ -105,7 +105,6 @@ class Model{
     }
 
     gameOver(){
-        console.log('Game Over')
         this.doodle.setPosition(Canva.WIDTH/2 - 37, Canva.HEIGHT-75)
         this.score = 0
         this.platforms = [];
@@ -133,10 +132,16 @@ class Model{
         this.doodle.move(fps, this.platforms, this.display);
         for (let i = 0; i < this.platforms.length; i++){
             let platform = this.platforms[i];
-            if (platform.direction === 1 && platform.position.x > Canva.WIDTH - platform.width) {
-                platform.direction = -1;
+            if (platform.position.y > Canva.HEIGHT + 100) {
+                this.removePlatform(platform);
+            }
+            if (
+            platform.direction === 1 &&
+            platform.position.x > Canva.WIDTH - platform.width
+            ) {
+            platform.direction = -1;
             } else if (platform.direction === -1 && platform.position.x < 0) {
-                platform.direction = 1;
+            platform.direction = 1;
             }
             platform.display(this.platformDisplay)
             if (platform.type === 1) {
