@@ -2,44 +2,54 @@ import { Doodle } from "./Doodle.js";
 import { Platform } from "./Platform.js";
 import { Canva } from "./Canva.js";
 import { Bot } from "./Bot.js";
+import { NeuralNetwork } from "../Controller/NeuralNetwork.js";
 
 function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
+  return Math.floor(Math.random() * max);
 }
 
-class Model{
-    constructor(){
-        this.doodle = new Doodle(75, 75, Canva.WIDTH/2 - 37, Canva.HEIGHT-75); 
-        this.bot = new Bot()
-        this.platforms = [];
-        this.score = 0;
-        
-        this.createPlatforms()
+class Model {
+  constructor() {
+    this.doodle = new Doodle(75, 75, Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
+    this.bot = new Bot()
+    this.platforms = [];
+    this.score = 0;
+    this.autopilot = false;
 
-        this.doodle.bindAddScore(this.addScore.bind(this));
-        this.doodle.bindGetScore(this.getScore.bind(this));
-        this.doodle.bindGameOver(this.gameOver.bind(this));
-        this.doodle.bindRemovePlatform(this.removePlatform.bind(this));
-    }
+    this.createPlatforms();
 
-    createPlatforms(){
-        let lastHeight = 0;
-        for(let i = 1; i < 7; i+= 0.25){
-            for(let j = 0; j < 10*i; j++){
-                let rand = getRandomInt(10)
-                this.platforms.push(new Platform(57, 15, getRandomInt(Canva.WIDTH-57), Canva.HEIGHT - (lastHeight + 30*i), rand===9 ? 2 : rand === 8 ? 1 : 0))
-                lastHeight += 30*i
-            }
-        }
-    }
+    this.doodle.bindAddScore(this.addScore.bind(this));
+    this.doodle.bindGetScore(this.getScore.bind(this));
+    this.doodle.bindGameOver(this.gameOver.bind(this));
+    this.doodle.bindRemovePlatform(this.removePlatform.bind(this));
+  }
 
-    getDirection(){
-        return this.doodle.getDirection();
+  createPlatforms() {
+    let lastHeight = 0;
+    for (let i = 1; i < 7; i += 0.25) {
+      for (let j = 0; j < 10 * i; j++) {
+        let rand = getRandomInt(10);
+        this.platforms.push(
+          new Platform(
+            57,
+            15,
+            getRandomInt(Canva.WIDTH - 57),
+            Canva.HEIGHT - (lastHeight + 30 * i),
+            rand === 9 ? 2 : rand === 8 ? 1 : 0
+          )
+        );
+        lastHeight += 30 * i;
+      }
     }
+  }
 
-    setDirection(newDirection){
-        this.doodle.setDirection(newDirection);
-    }
+  getDirection() {
+    return this.doodle.getDirection();
+  }
+
+  setDirection(newDirection) {
+    this.doodle.setDirection(newDirection);
+  }
 
     // getNeighbors(){
     //     let results = [];
@@ -96,61 +106,76 @@ class Model{
         return results.sort((a, b) => a.distance - b.distance);
     }
     
-    getScore(){
-        return this.score;
-    }
+  toggleAutopilot(toggle) {
+    this.autopilot = toggle;
+    this.setDirection(0);
+  }
 
-    addScore(_score){
-        this.score += _score;
-    }
+  getScore() {
+    return this.score;
+  }
 
-    gameOver(){
-        this.doodle.setPosition(Canva.WIDTH/2 - 37, Canva.HEIGHT-75)
-        this.score = 0
-        this.platforms = [];
-        this.createPlatforms()
-    }
+  addScore(_score) {
+    this.score += _score;
+  }
+
+  isAutopilot() {
+    return this.autopilot;
+  }
+
+  gameOver() {
+    this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
+    this.score = 0;
+    this.platforms = [];
+    this.createPlatforms();
+  }
 
     bindDisplay(callback) {
         this.display = callback;
     }
 
-    bindPlatformDisplay(callback){
-        this.platformDisplay = callback
+  bindPlatformDisplay(callback) {
+    this.platformDisplay = callback;
+  }
+
+  bindScoreDisplay(callback) {
+    this.scoreDisplay = callback;
+  }
+
+  removePlatform(platform) {
+    let index = this.platforms.indexOf(platform);
+    this.platforms.splice(index, 1);
+  }
+
+  update(fps) {
+    this.doodle.move(fps, this.platforms, this.display);
+    for (let i = 0; i < this.platforms.length; i++) {
+      let platform = this.platforms[i];
+      if (platform.position.y > Canva.HEIGHT + 100) {
+        this.removePlatform(platform);
+      }
+      if (
+        platform.direction === 1 &&
+        platform.position.x > Canva.WIDTH - platform.width
+      ) {
+        platform.direction = -1;
+      } else if (platform.direction === -1 && platform.position.x < 0) {
+        platform.direction = 1;
+      }
+      platform.display(this.platformDisplay);
+      if (platform.type === 1) {
+        platform.move(this.display);
+      }
     }
 
-    bindScoreDisplay(callback){
-        this.scoreDisplay = callback
+    if (this.isAutopilot()) {
+      const bot = new NeuralNetwork(0.9, 0.85, 0.6, 0.1, 0.6, 0.45);
+      let direction = bot.autopilot();
+      this.setDirection(direction);
     }
 
-    removePlatform(platform) {
-        let index = this.platforms.indexOf(platform);
-        this.platforms.splice(index, 1);
-    }
-
-    update(fps){
-        this.doodle.move(fps, this.platforms, this.display);
-        for (let i = 0; i < this.platforms.length; i++){
-            let platform = this.platforms[i];
-            if (platform.position.y > Canva.HEIGHT + 100) {
-                this.removePlatform(platform);
-            }
-            if (
-            platform.direction === 1 &&
-            platform.position.x > Canva.WIDTH - platform.width
-            ) {
-            platform.direction = -1;
-            } else if (platform.direction === -1 && platform.position.x < 0) {
-            platform.direction = 1;
-            }
-            platform.display(this.platformDisplay)
-            if (platform.type === 1) {
-                platform.move(this.display);
-            }
-        }
-        
-        if(this.scoreDisplay) this.scoreDisplay(this.score)
-    }
+    if(this.scoreDisplay) this.scoreDisplay(this.score);
+  }
 }
 
-export {Model}
+export { Model };

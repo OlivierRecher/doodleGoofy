@@ -7,11 +7,13 @@
 </head>
 <body>
     <canvas id="my_canvas"></canvas>
+    <button id="bot">Autopilote</button>
 
     <script type="module">
         import { Controller } from './Controller/Controller.js';
         import { Canva } from './Model/Canva.js';
 
+        const bot = document.getElementById('bot');
         const canvas = document.getElementById('my_canvas');
         canvas.width = Canva.WIDTH;
         canvas.height = Canva.HEIGHT;
@@ -25,6 +27,11 @@
             .then(() => {
                 const app = new Controller(HEXTILES_IMAGE);
                 app.update();
+
+                bot.addEventListener('click', () => {
+                    app.toggleAutopilot(!app.isAutopilot());
+                    bot.innerText =  app.isAutopilot() ? 'Manual' : 'AutoPilote';
+                });
             });
         })();
     </script>
