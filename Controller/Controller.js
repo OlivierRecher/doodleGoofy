@@ -1,6 +1,5 @@
 import { Model } from "../Model/Model.js";
 import { View } from "../View/View.js";
-import { ViewAi } from "../View/ViewAi.js";
 
 // import { Platform } from "../Model/Platform";
 
@@ -19,6 +18,7 @@ class Controller {
         this.model.bindScoreDisplay(this.scoreDisplay.bind(this));
         this.view.bindSetDirection(this.setDirection.bind(this));
         this.view.bindGetDirection(this.getDirection.bind(this));
+        this.view.bindGetNeighbors(this.getNieghbors.bind(this));
     }
 
     display = (position) => {
@@ -39,6 +39,10 @@ class Controller {
 
     getDirection() {
         return this.model.getDirection();
+    }
+
+    getNieghbors() {
+        return this.model.getNeighbors();
     }
     
     update() {
