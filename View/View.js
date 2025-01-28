@@ -65,18 +65,19 @@ class View {
     let y = position.y;
     this.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
+    let neighbors = this.getNeighbors()
+    let colors = ['red', 'yellow', 'blue', 'green']
+    for(let i = 0; i < neighbors.length; i++){
+      this.ctx.beginPath();
+      this.ctx.moveTo(x+35, y+35);
+      this.ctx.lineTo(neighbors[i].position.x, neighbors[i].position.y);
+      this.ctx.strokeStyle = colors[i];
+      this.ctx.stroke();
+    }
+
     let doodle = this.b_GetDirection() == 1 ? doodleRight : doodleLeft;
     this.ctx.globalCompositeOperation='destination-over';
     this.ctx.drawImage(doodle, x, y, 75, 75);
-
-    let neighbors = this.getNeighbors()
-    console.log(neighbors)
-    for(let i = 0; i < neighbors.length; i++){
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, y);
-      this.ctx.lineTo(neighbors[i].position.x, neighbors[i].position.y);
-      this.ctx.stroke();
-    }
   }
 
   platformDisplay(type, position){

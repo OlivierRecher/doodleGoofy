@@ -51,60 +51,60 @@ class Model {
     this.doodle.setDirection(newDirection);
   }
 
-    // getNeighbors(){
-    //     let results = [];
-    //     let platformsDisplayed = this.platforms.filter((p) => p.getY() > 0 && p.getY() < Canva.HEIGHT && p.getX() > 0 && p.getX() < Canva.WIDTH)
-    //     console.log(platformsDisplayed)
-    //     for(let i = 0; i < platformsDisplayed.length; i++){
-    //         let platform = platformsDisplayed[i];
-    //         let platformCenter = platform.getCenter()
-    //         let distance = Math.sqrt(Math.pow(this.doodle.getCenter().x - platformCenter.x, 2) + Math.pow(this.doodle.getCenter().y - platformCenter.y, 2))
-    //         if(results.length === 4){
-    //             console.log(Math.max(...results.map((r) => r.distance)) > distance)
-    //             if(Math.max(...results.map((r) => r.distance)) > distance){
-    //                 results[results.findIndex(r => r.distance === Math.max(...results.map((r) => r.distance)))] = {distance:distance, position:platform.getCenter()}
-    //             }
-    //         }else results.push({distance:distance, position:platform.getCenter()})
-    //     }
-    //     return results;
-    // }
-
-    getNeighbors() {
-        const results = [];
-        // Filtrer les plateformes affichées dans les limites du canvas
-        const platformsDisplayed = this.platforms.filter(
-            (p) =>
-                p.getY() > 0 &&
-                p.getY() < Canva.HEIGHT &&
-                p.getX() > 0 &&
-                p.getX() < Canva.WIDTH
-        );
-    
-        for (const platform of platformsDisplayed) {
-            const platformCenter = platform.getCenter();
-            const doodleCenter = this.doodle.getCenter();
-            const distance = Math.sqrt(
-                Math.pow(doodleCenter.x - platformCenter.x, 2) +
-                Math.pow(doodleCenter.y - platformCenter.y, 2)
-            );
-    
-            // Si nous avons déjà 4 résultats, vérifier s'il faut remplacer le plus éloigné
-            if (results.length === 4) {
-                const maxDistanceIndex = results.findIndex(
-                    (r) => r.distance === Math.max(...results.map((r) => r.distance))
-                );
+    getNeighbors(){
+        let results = [];
+        const doodleCenter = this.doodle.getCenter();
+        let platformsDisplayed = this.platforms.filter((p) => p.getY() > 0 && p.getY() < Canva.HEIGHT && p.getX() > 0 && p.getX() < Canva.WIDTH)
+        for(let i = 0; i < platformsDisplayed.length; i++){
+            let platform = platformsDisplayed[i];
+            const platformCenter = platform.getCenter()
+            let distance = Math.sqrt(Math.pow(doodleCenter.x - platformCenter.x, 2) + Math.pow(doodleCenter.y - platformCenter.y, 2))
+            if(results.length === 4){
+                const maxDistanceIndex = results.findIndex((r) => r.distance === Math.max(...results.map((r) => r.distance)));
                 if (results[maxDistanceIndex].distance > distance) {
-                    results[maxDistanceIndex] = { distance, position: platformCenter };
+                    results[maxDistanceIndex] = { distance, position: platformCenter};
                 }
-            } else {
-                // Ajouter directement si moins de 4 résultats
-                results.push({ distance, position: platformCenter });
-            }
+            }else results.push({distance:distance, position:platformCenter})
         }
-    
-        // Retourner les résultats triés par distance croissante
         return results.sort((a, b) => a.distance - b.distance);
     }
+
+    // getNeighbors() {
+    //     const results = [];
+    //     // Filtrer les plateformes affichées dans les limites du canvas
+    //     const platformsDisplayed = this.platforms.filter(
+    //         (p) =>
+    //             p.getY() > 0 &&
+    //             p.getY() < Canva.HEIGHT &&
+    //             p.getX() > 0 &&
+    //             p.getX() < Canva.WIDTH
+    //     );
+    
+    //     for (const platform of platformsDisplayed) {
+    //         const platformCenter = platform.getCenter();
+    //         const doodleCenter = this.doodle.getCenter();
+    //         const distance = Math.sqrt(
+    //             Math.pow(doodleCenter.x - platformCenter.x, 2) +
+    //             Math.pow(doodleCenter.y - platformCenter.y, 2)
+    //         );
+    
+    //         // Si nous avons déjà 4 résultats, vérifier s'il faut remplacer le plus éloigné
+    //         if (results.length === 4) {
+    //             const maxDistanceIndex = results.findIndex(
+    //                 (r) => r.distance === Math.max(...results.map((r) => r.distance))
+    //             );
+    //             if (results[maxDistanceIndex].distance > distance) {
+    //                 results[maxDistanceIndex] = { distance, position: platformCenter };
+    //             }
+    //         } else {
+    //             // Ajouter directement si moins de 4 résultats
+    //             results.push({ distance, position: platformCenter });
+    //         }
+    //     }
+    
+    //     // Retourner les résultats triés par distance croissante
+    //     return results.sort((a, b) => a.distance - b.distance);
+    // }
     
   toggleAutopilot(toggle) {
     this.autopilot = toggle;
