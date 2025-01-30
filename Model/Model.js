@@ -23,7 +23,11 @@ class Model {
     this.matrix1 = this.generatedRandomMatrix(4, 6);
     this.matrix2 = this.generatedRandomMatrix(3, 4);
     this.bais = [[getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1]];
+<<<<<<< HEAD
 >>>>>>> 8c566e8 (bot wip)
+=======
+    this.difficulty = 1;
+>>>>>>> b64f78c (Difficulté)
 
     this.createPlatforms();
 
@@ -148,6 +152,10 @@ class Model {
   
   isAutopilot() {
     return this.autopilot;
+  }
+
+  bindDisplay(callback) {
+    this.display = callback;
   }
 
   gameOver() {
