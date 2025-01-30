@@ -6,22 +6,11 @@ class NeuralNetwork {
         this.m4 = m4;
         this.x = x;
         this.y = y;
-        // this.bais = bais;
-        // this.matrix = matrix1;
-        // this.outputMatrix = matrix2;
-        this.bais = [];
-        this.matrix = [];
-        this.outputMatrix = [];
+        this.bais = bais;
+        this.matrix = matrix1;
+        this.outputMatrix = matrix2;
         this.weights = [];
         this.result = [];
-    }
-
-    async loadData() {
-        const response = await fetch("./data.json");
-        const data = await response.json();
-        this.bais = data.bais;
-        this.matrix = data.matrix1;
-        this.outputMatrix = data.matrix2;
     }
 
     random() {
@@ -44,20 +33,16 @@ class NeuralNetwork {
                 Number(this.matrix[i][5]) * Number(this.y) +
                 Number(this.bais[0][i])
             );
-            console.log(weights);
         }
         
-        let values = this.weights.map(weight => this.ReLU(weight));
-
         for (let i = 0; i < this.outputMatrix.length; i++) {
             let weight =
-                this.outputMatrix[i][0] * values[0] +
-                this.outputMatrix[i][1] * values[1] +
-                this.outputMatrix[i][2] * values[2] +
-                this.outputMatrix[i][3] * values[3];
+              this.outputMatrix[i][0] * this.ReLU(weights[0]) +
+              this.outputMatrix[i][1] * this.ReLU(weights[1]) +
+              this.outputMatrix[i][2] * this.ReLU(weights[2]) +
+              this.outputMatrix[i][3] * this.ReLU(weights[3]);
             this.result.push(this.ReLU(weight));
         }
-
         console.log(this.result);
         return this.result.indexOf(Math.max(...this.result)) - 1;
     }

@@ -15,12 +15,19 @@ class Model {
     this.platforms = [];
     this.score = 0;
     this.autopilot = false;
+<<<<<<< HEAD
     this.difficulty = 1;
+=======
+>>>>>>> 450604d (bot wip)
     this.isGameOver = false;
     
     this.matrix1 = this.generatedRandomMatrix(4, 6);
     this.matrix2 = this.generatedRandomMatrix(3, 4);
     this.bais = [[getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1]];
+<<<<<<< HEAD
+=======
+
+>>>>>>> 450604d (bot wip)
     this.createPlatforms();
 
     this.doodle.bindAddScore(this.addScore.bind(this));
@@ -146,10 +153,6 @@ class Model {
     return this.autopilot;
   }
 
-  bindDisplay(callback) {
-    this.display = callback;
-  }
-
   gameOver() {
     this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
     this.score = 0;
@@ -212,7 +215,6 @@ class Model {
         this.matrix2,
         this.bais
       );
-      await bot.loadData();
       let direction = bot.autopilot();
       this.setDirection(direction);
     }
