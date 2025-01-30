@@ -15,6 +15,7 @@ class Model {
     this.platforms = [];
     this.score = 0;
     this.autopilot = false;
+    this.difficulty = 1;
 
     this.createPlatforms();
 
@@ -25,20 +26,18 @@ class Model {
   }
 
   createPlatforms() {
-    let lastHeight = 0;
-    for (let i = 1; i < 7; i += 0.25) {
-      for (let j = 0; j < 10 * i; j++) {
-        let rand = getRandomInt(10);
-        this.platforms.push(
-          new Platform(
-            57,
-            15,
-            getRandomInt(Canva.WIDTH - 57),
-            Canva.HEIGHT - (lastHeight + 30 * i),
-            rand === 9 ? 2 : rand === 8 ? 1 : 0
-          )
-        );
-        lastHeight += 30 * i;
+    let lastPlatform = this.platforms[this.platforms.length-1];
+    let lastHeight = lastPlatform ? lastPlatform.getY() : Canva.HEIGHT
+    let minHeight = 25
+    let maxHeight = -2000
+    while (lastHeight > maxHeight){
+      let rand = getRandomInt(11-this.difficulty);
+      this.platforms.push(
+        new Platform(57,15,getRandomInt(Canva.WIDTH - 57),lastHeight - (minHeight * this.difficulty),rand === 0 ? 2 : rand === 1 ? 1 : 0)
+      );
+      lastHeight -= minHeight * this.difficulty
+      if(this.difficulty * 2000 < this.score && this.difficulty < 8) {
+        this.difficulty += 0.25;
       }
     }
   }
@@ -98,13 +97,14 @@ class Model {
   gameOver() {
     this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
     this.score = 0;
+    this.difficulty = 1;
     this.platforms = [];
     this.createPlatforms();
   }
 
-    bindDisplay(callback) {
-        this.display = callback;
-    }
+  bindDisplay(callback) {
+    this.display = callback;
+  }
 
   bindPlatformDisplay(callback) {
     this.platformDisplay = callback;
@@ -121,6 +121,7 @@ class Model {
 
   update(fps) {
     this.doodle.move(fps, this.platforms, this.display);
+
     for (let i = 0; i < this.platforms.length; i++) {
       let platform = this.platforms[i];
       if (platform.position.y > Canva.HEIGHT + 100) {
@@ -139,6 +140,8 @@ class Model {
         platform.move(this.display);
       }
     }
+
+    if(this.platforms.length > 0 && this.platforms[this.platforms.length-1].getY() > -175) this.createPlatforms()
 
     if (this.isAutopilot()) {
       let neighbors = this.getNeighbors();

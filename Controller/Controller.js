@@ -12,14 +12,14 @@ class Controller {
     this.fps = 60;
     this.frameDuration = 1000 / this.fps;
     this.autopilot = false;
-
-        this.model.bindDisplay(this.display.bind(this));
-        this.model.bindPlatformDisplay(this.platformDisplay.bind(this));
-        this.model.bindScoreDisplay(this.scoreDisplay.bind(this));
-        this.view.bindSetDirection(this.setDirection.bind(this));
-        this.view.bindGetDirection(this.getDirection.bind(this));
-        this.view.bindGetNeighbors(this.getNieghbors.bind(this));
-    }
+    
+    this.model.bindDisplay(this.display.bind(this));
+    this.model.bindPlatformDisplay(this.platformDisplay.bind(this));
+    this.model.bindScoreDisplay(this.scoreDisplay.bind(this));
+    this.view.bindSetDirection(this.setDirection.bind(this));
+    this.view.bindGetDirection(this.getDirection.bind(this));
+    this.view.bindGetNeighbors(this.getNieghbors.bind(this));
+  }
 
   display = (position) => {
     this.view.Display(position);
@@ -49,9 +49,9 @@ class Controller {
     return this.model.isAutopilot();
   }
 
-    getNieghbors() {
-        return this.model.getNeighbors();
-    }
+  getNieghbors() {
+    return this.model.getNeighbors();
+  }
 
   update() {
     /* Calcul du deltaTime */
