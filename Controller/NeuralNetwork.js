@@ -6,11 +6,22 @@ class NeuralNetwork {
         this.m4 = m4;
         this.x = x;
         this.y = y;
-        this.bais = bais;
-        this.matrix = matrix1;
-        this.outputMatrix = matrix2;
+        // this.bais = bais;
+        // this.matrix = matrix1;
+        // this.outputMatrix = matrix2;
+        this.bais = [];
+        this.matrix = [];
+        this.outputMatrix = [];
         this.weights = [];
         this.result = [];
+    }
+
+    async loadData() {
+        const response = await fetch("./data.json");
+        const data = await response.json();
+        this.bais = data.bais;
+        this.matrix = data.matrix1;
+        this.outputMatrix = data.matrix2;
     }
 
     random() {
@@ -46,6 +57,8 @@ class NeuralNetwork {
                 this.outputMatrix[i][3] * values[3];
             this.result.push(this.ReLU(weight));
         }
+
+        console.log(this.result);
         return this.result.indexOf(Math.max(...this.result)) - 1;
     }
 }
