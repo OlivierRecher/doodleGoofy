@@ -2,22 +2,27 @@ import { Model } from "../Model/Model.js";
 import { View } from "../View/View.js";
 
 class Controller {
-  constructor(_assets) {
-    this.model = new Model();
-    this.view = new View(_assets);
+  constructor(_assets, canvaId = "my_canvas", ai = false, data = null) {
+    this.model = new Model(data);
+    this.view = new View(_assets, canvaId);
 
     this.startTime = Date.now();
     this.lag = 0;
     this.fps = 60;
     this.frameDuration = 1000 / this.fps;
-    this.autopilot = false;
-    
+    this.autopilot = ai;
+    this.result = {};
+
+    this.lastScore = this.model.getScore();
+    this.lastScoreChangeTime = Date.now();
+
     this.model.bindDisplay(this.display.bind(this));
     this.model.bindPlatformDisplay(this.platformDisplay.bind(this));
     this.model.bindScoreDisplay(this.scoreDisplay.bind(this));
     this.view.bindSetDirection(this.setDirection.bind(this));
     this.view.bindGetDirection(this.getDirection.bind(this));
     this.view.bindGetNeighbors(this.getNieghbors.bind(this));
+    this.toggleAutopilot(this.autopilot);
   }
 
   display = (position) => {
@@ -30,6 +35,10 @@ class Controller {
 
   scoreDisplay = (_score) => {
     this.view.scoreDisplay(_score);
+    if (_score !== this.lastScore) {
+      this.lastScore = _score;
+      this.lastScoreChangeTime = Date.now();
+    }
   };
 
   setDirection(newDirection) {
@@ -49,27 +58,61 @@ class Controller {
     return this.model.isAutopilot();
   }
 
+  isGameOver() {
+    return this.model.isGameOver;
+  }
+
   getNieghbors() {
     return this.model.getNeighbors();
   }
 
+  getResult() {
+    return this.result;
+  }
+
+  setGameOver() {
+    this.model.setGameOver(true);
+  }
+
   update() {
-    /* Calcul du deltaTime */
-    let currentTime = Date.now();
-    let deltaTime = currentTime - this.startTime; // La durée entre deux appels (entre 2 frames).
+    return new Promise((resolve) => {
+      const gameLoop = () => {
+        if (this.isGameOver()) {
+          this.result = {
+            score: this.model.getScore(),
+            matrix1: this.model.matrix1,
+            matrix2: this.model.matrix2,
+            bais: this.model.bais,
+          };
+          resolve(this.result); // Resolve the promise with the result
+          return; // Stop the loop
+        }
 
-    this.lag += deltaTime;
-    this.startTime = currentTime;
+        /* Calculate deltaTime */
+        let currentTime = Date.now();
+        let deltaTime = currentTime - this.startTime;
 
-    /* Mettre à jour la logique si la variable _lag est supérieure ou égale à la durée d'une frame */
-    while (this.lag >= this.frameDuration) {
-      /* Mise à jour de la logique */
-      this.model.update(this.fps);
-      /* Réduire la variable _lag par la durée d'une frame */
-      this.lag -= this.frameDuration;
-    }
+        this.lag += deltaTime;
+        this.startTime = currentTime;
 
-    requestAnimationFrame(this.update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
+        /* Update logic if lag is sufficient */
+        while (this.lag >= this.frameDuration) {
+          this.model.update(this.fps);
+          this.lag -= this.frameDuration;
+        }
+
+        /* Check if score hasn't changed for 20 seconds */
+        if (currentTime - this.lastScoreChangeTime >= 20000) {
+          this.model.setGameOver(true);
+        }
+
+        requestAnimationFrame(gameLoop); // Continue the loop
+      };
+
+      // Start the loop
+      this.startTime = Date.now();
+      gameLoop();
+    });
   }
 }
 
