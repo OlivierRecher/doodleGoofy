@@ -1,6 +1,5 @@
 import { Model } from "../Model/Model.js";
 import { View } from "../View/View.js";
-import { ViewAi } from "../View/ViewAi.js";
 
 class Controller {
   constructor(_assets) {
@@ -43,6 +42,7 @@ class Controller {
 
   toggleAutopilot(toggle) {
     this.model.toggleAutopilot(toggle);
+    this.view.toggleAutopilot(toggle);
   }
 
   isAutopilot() {

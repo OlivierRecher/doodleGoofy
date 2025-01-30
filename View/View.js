@@ -9,6 +9,7 @@ class View {
     this.ctx = this._canvas.getContext("2d");
     this._hold_right = false;
     this._hold_left = false;
+    this.autopilot = false;
     this.assets = _assets
 
     this.events();
@@ -24,6 +25,10 @@ class View {
 
   bindGetNeighbors(callback){
     this.getNeighbors = callback
+  }
+
+  toggleAutopilot(toggle) {
+    this.autopilot = toggle;
   }
 
   events() {
@@ -65,17 +70,19 @@ class View {
     let y = position.y;
     this.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
-    let neighbors = this.getNeighbors()
-    let colors = ['red', 'yellow', 'blue', 'green']
-    for(let i = 0; i < neighbors.length; i++){
-      if(neighbors[i].distance > 0){
-        this.ctx.beginPath();
-        this.ctx.moveTo(x+35, y+35);
-        this.ctx.lineTo(neighbors[i].position.x, neighbors[i].position.y);
-        this.ctx.strokeStyle = colors[i];
-        this.ctx.stroke();
+    if(this.autopilot){
+      let neighbors = this.getNeighbors()
+      let colors = ['red', 'yellow', 'blue', 'green']
+      for(let i = 0; i < neighbors.length; i++){
+        if(neighbors[i].distance > 0){
+          this.ctx.beginPath();
+          this.ctx.moveTo(x+35, y+35);
+          this.ctx.lineTo(neighbors[i].position.x, neighbors[i].position.y);
+          this.ctx.strokeStyle = colors[i];
+          this.ctx.stroke();
+        }
+        
       }
-      
     }
 
     let doodle = this.b_GetDirection() == 1 ? doodleRight : doodleLeft;

@@ -1,6 +1,6 @@
 class Canva {
     static WIDTH = 410;
-    static HEIGHT = 710;
+    static HEIGHT = window.innerHeight -250;
 }
 
 export { Canva };
