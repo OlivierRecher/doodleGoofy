@@ -36,7 +36,7 @@ body{
 
 .page .buttons{
     display: flex;
-    margin: 20px 0;
+    margin-top: 30px;
 }
 
 .page .buttons .button{
@@ -48,6 +48,7 @@ body{
     height: 40px;
     cursor: pointer;
     transition: all .2s;
+    margin: 0 10px;
 }
 
 .page .buttons .button:hover{
