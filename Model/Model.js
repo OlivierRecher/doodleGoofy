@@ -9,12 +9,17 @@ function getRandomInt(max) {
 }
 
 class Model {
-  constructor() {
+  constructor(data = null) {
     this.doodle = new Doodle(75, 75, Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
-    this.bot = new Bot()
+    this.bot = new Bot();
     this.platforms = [];
     this.score = 0;
     this.autopilot = false;
+    this.isGameOver = false;
+    
+    this.matrix1 = this.generatedRandomMatrix(4, 6);
+    this.matrix2 = this.generatedRandomMatrix(3, 4);
+    this.bais = [[getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1]];
 
     this.createPlatforms();
 
@@ -51,31 +56,79 @@ class Model {
     this.doodle.setDirection(newDirection);
   }
 
-  getNeighbors(){
+  setGameOver(bool) {
+    this.isGameOver = bool;
+  }
+
+  getNeighbors() {
     let results = {};
-    const doodleCenter = this.doodle.getCenter()
-    let platformsDisplayed = this.platforms.filter((p) => p.getCenter().y > 0 && p.getCenter().y < Canva.HEIGHT && p.getCenter().x > 0 && p.getCenter().x < Canva.WIDTH);
-    for(let i = 0; i < platformsDisplayed.length; i++){
+    const doodleCenter = this.doodle.getCenter();
+    let platformsDisplayed = this.platforms.filter(
+      (p) =>
+        p.getCenter().y > 0 &&
+        p.getCenter().y < Canva.HEIGHT &&
+        p.getCenter().x > 0 &&
+        p.getCenter().x < Canva.WIDTH
+    );
+    for (let i = 0; i < platformsDisplayed.length; i++) {
       const platform = platformsDisplayed[i];
-      const platformCenter = platform.getCenter()
-      const distance = Math.sqrt(Math.pow(platformCenter.x - doodleCenter.x, 2) + Math.pow(platformCenter.y - doodleCenter.y, 2))
-      if(platformCenter.x < doodleCenter.x && platformCenter.y < doodleCenter.y){
-        if((results.topLeft && results.topLeft.distance > distance) || !results.topLeft) results.topLeft = {distance : distance, position:platformCenter}
-      }else if(platformCenter.x > doodleCenter.x && platformCenter.y < doodleCenter.y){
-        if((results.topRight && results.topRight.distance > distance) || !results.topRight) results.topRight = {distance : distance, position:platformCenter}
-      }else if(platformCenter.x < doodleCenter.x && platformCenter.y > doodleCenter.y){
-        if((results.bottomLeft && results.bottomLeft.distance > distance) || !results.bottomLeft) results.bottomLeft = {distance : distance, position:platformCenter}
-      }else if(platformCenter.x > doodleCenter.x && platformCenter.y > doodleCenter.y){
-        if((results.bottomRight && results.bottomRight.distance > distance) || !results.bottomRight) results.bottomRight = {distance : distance, position:platformCenter}
+      const platformCenter = platform.getCenter();
+      const distance = Math.sqrt(
+        Math.pow(platformCenter.x - doodleCenter.x, 2) +
+          Math.pow(platformCenter.y - doodleCenter.y, 2)
+      );
+      if (
+        platformCenter.x < doodleCenter.x &&
+        platformCenter.y < doodleCenter.y
+      ) {
+        if (
+          (results.topLeft && results.topLeft.distance > distance) ||
+          !results.topLeft
+        )
+          results.topLeft = { distance: distance, position: platformCenter };
+      } else if (
+        platformCenter.x > doodleCenter.x &&
+        platformCenter.y < doodleCenter.y
+      ) {
+        if (
+          (results.topRight && results.topRight.distance > distance) ||
+          !results.topRight
+        )
+          results.topRight = { distance: distance, position: platformCenter };
+      } else if (
+        platformCenter.x < doodleCenter.x &&
+        platformCenter.y > doodleCenter.y
+      ) {
+        if (
+          (results.bottomLeft && results.bottomLeft.distance > distance) ||
+          !results.bottomLeft
+        )
+          results.bottomLeft = { distance: distance, position: platformCenter };
+      } else if (
+        platformCenter.x > doodleCenter.x &&
+        platformCenter.y > doodleCenter.y
+      ) {
+        if (
+          (results.bottomRight && results.bottomRight.distance > distance) ||
+          !results.bottomRight
+        )
+          results.bottomRight = {
+            distance: distance,
+            position: platformCenter,
+          };
       }
     }
 
-    if(!results.topLeft) results.topLeft = {distance : -1, position:{x:-1, y:-1}}
-    if(!results.topRight) results.topRight = {distance : -1, position:{x:-1, y:-1}}
-    if(!results.bottomLeft) results.bottomLeft = {distance : -1, position:{x:-1, y:-1}}
-    if(!results.bottomRight) results.bottomRight = {distance : -1, position:{x:-1, y:-1}}
-    
-    return Object.keys(results).map(r => results[r])
+    if (!results.topLeft)
+      results.topLeft = { distance: -1, position: { x: -1, y: -1 } };
+    if (!results.topRight)
+      results.topRight = { distance: -1, position: { x: -1, y: -1 } };
+    if (!results.bottomLeft)
+      results.bottomLeft = { distance: -1, position: { x: -1, y: -1 } };
+    if (!results.bottomRight)
+      results.bottomRight = { distance: -1, position: { x: -1, y: -1 } };
+
+    return Object.keys(results).map((r) => results[r]);
   }
 
   toggleAutopilot(toggle) {
@@ -91,20 +144,21 @@ class Model {
     this.score += _score;
   }
 
+  gameOver() {
+    this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
+    // this.score = 0;
+    this.platforms = [];
+    // this.createPlatforms();
+    this.isGameOver = true;
+  }
+
   isAutopilot() {
     return this.autopilot;
   }
 
-  gameOver() {
-    this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
-    this.score = 0;
-    this.platforms = [];
-    this.createPlatforms();
+  bindDisplay(callback) {
+    this.display = callback;
   }
-
-    bindDisplay(callback) {
-        this.display = callback;
-    }
 
   bindPlatformDisplay(callback) {
     this.platformDisplay = callback;
@@ -143,19 +197,32 @@ class Model {
     if (this.isAutopilot()) {
       let neighbors = this.getNeighbors();
       const bot = new NeuralNetwork(
-        neighbors[0].distance / Canva.WIDTH,
-        neighbors[1].distance / Canva.WIDTH,
-        neighbors[2].distance / Canva.WIDTH,
-        neighbors[3].distance / Canva.WIDTH,
+        neighbors[0].distance,
+        neighbors[1].distance,
+        neighbors[2].distance,
+        neighbors[3].distance,
         this.doodle.position.x,
         this.doodle.position.y,
+        this.matrix1,
+        this.matrix2,
+        this.bais
       );
-      await bot.loadData();
       let direction = bot.autopilot();
       this.setDirection(direction);
     }
 
-    if(this.scoreDisplay) this.scoreDisplay(this.score);
+    if (this.scoreDisplay) this.scoreDisplay(this.score);
+  }
+
+  generatedRandomMatrix(rows, cols) {
+    let matrix = [];
+    for (let i = 0; i < rows; i++) {
+      matrix.push([]);
+      for (let j = 0; j < cols; j++) {
+        matrix[i].push(Math.random() * 2 - 1);
+      }
+    }
+    return matrix;
   }
 }
 
