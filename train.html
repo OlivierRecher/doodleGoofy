@@ -21,7 +21,7 @@
             const promises = [];
             const data = await loadData();
 
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 100; i++) {
                 const canvas = document.createElement('canvas');
                 canvas.id = `my_canvas_${i}`;
                 canvas.width = Canva.WIDTH;
@@ -76,7 +76,7 @@
         }
 
         function reproduction(results) {
-            const topResults = results.slice(0, 20);
+            const topResults = results.slice(0, 10);
             const newMatrices = [];
             
             for (let i = 0; i < topResults.length; i++) {
@@ -99,13 +99,17 @@
 
             function averageMatrices(matrix1, matrix2) {
                 return matrix1.map((row, rowIndex) =>
-                    row.map((value, colIndex) => (value + matrix2[rowIndex][colIndex]) / 2)
+                    row.map((value, colIndex) => (mutate(value + matrix2[rowIndex][colIndex]) / 2))
                 );
             }
 
             function averageArray(array1, array2) {
-                return array1.map((value, index) => (value + array2[index]) / 2);
+                return array1.map((value, index) => (mutate(value + array2[index]) / 2));
             }
+        }
+
+        function mutate(value){
+            return value + (Math.random() - 0.9);
         }
 
         initializeCanvases();

@@ -43,7 +43,6 @@ class NeuralNetwork {
               this.outputMatrix[i][3] * this.ReLU(weights[3]);
             this.result.push(this.ReLU(weight));
         }
-        console.log(this.result);
         return this.result.indexOf(Math.max(...this.result)) - 1;
     }
 }
