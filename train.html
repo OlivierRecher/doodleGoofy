@@ -5,9 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body style="flex-direction: column;">
-    <textarea id="result1" style="width: 100%; height: 100px;"></textarea>
-    <textarea id="result2" style="width: 100%; height: 100px;"></textarea>
+<body>
+    <div class="trainPage">
+        <!-- <textarea id="result1" style="width: 100%; height: 100px;"></textarea> -->
+        <!-- <textarea id="result2" style="width: 100%; height: 100px;"></textarea> -->
+        <div class="trainTitle">
+            <div class="backButton">
+                <button class="button" id="train" onclick="window.location.href='./index.html'"><</button>
+            </div>
+            <h2 class="title">Entrainements</h2>
+        </div>
+        <div class="train"></div>
+    </div>
     <script type="module">
         import { Controller } from './Controller/Controller.js';
         import { Canva } from './Model/Canva.js';
@@ -20,13 +29,18 @@
             const promises = [];
             const data = await loadData();
 
+            const train = document.querySelector('.train')
+
             for (let i = 0; i < 100; i++) {
+                const canvaContent = document.createElement('div')
+                canvaContent.classList.add('canvaContent')
                 const canvas = document.createElement('canvas');
                 canvas.id = `my_canvas_${i}`;
                 canvas.width = Canva.WIDTH;
                 canvas.height = Canva.HEIGHT;
                 canvas.style.margin = '10px';
-                document.body.appendChild(canvas);
+                canvaContent.appendChild(canvas);
+                train.appendChild(canvaContent)
 
                 if(i === 0){
                     promises.push(initializeCanvas(canvas, data[i]));

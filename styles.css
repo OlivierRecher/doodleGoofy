@@ -16,7 +16,6 @@
 body{
     height: 100vh;
     width: 100%;
-    overflow: hidden;
 }
 
 .page{
@@ -26,6 +25,14 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+}
+
+.trainPage{
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color);
+    display: flex;
     flex-direction: column;
 }
 
@@ -39,7 +46,7 @@ body{
     margin-top: 30px;
 }
 
-.page .buttons .button{
+.page .buttons .button, .backButton .button{
     width: 170px;
     border-radius: 20px;
     border: none;
@@ -56,9 +63,39 @@ body{
 
 }
 
+.backButton .button{
+    width: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+
+}
+
 #my_canvas{
     border: 1px solid black;
     background-image: url('assets/bck@2x.png');
     background-size: cover;
     background-position: center;
+}
+
+.train{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.train .canvaContent{
+    padding: 5px;
+    margin: 15px;
+    border: 1px solid black;
+}
+
+.trainTitle{
+    display: flex;
+    margin: 20px;
+    align-items: center;
+}
+
+.trainTitle .title{
+    font-size: 30px;
 }
