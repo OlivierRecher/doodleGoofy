@@ -18,12 +18,9 @@ class Model {
     this.difficulty = 1;
     this.isGameOver = false;
     
-    this.matrix1 = this.generatedRandomMatrix(4, 6);
-    this.matrix2 = this.generatedRandomMatrix(3, 4);
-    this.bais = [[getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1, getRandomInt(2) * 2 - 1]];
-    // this.matrix1 = data ? data.matrix1 : this.generatedRandomMatrix(4, 6);
-    // this.matrix2 = data ? data.matrix2 : this.generatedRandomMatrix(3, 4);
-    // this.bais = data ? data.bais : this.generatedRandomMatrix(1, 4);
+    this.matrix1 = data ? data.matrix1 : this.generatedRandomMatrix(4, 6);
+    this.matrix2 = data ? data.matrix2 : this.generatedRandomMatrix(3, 4);
+    this.bais = data ? data.bais : this.generatedRandomMatrix(1, 4);
 
     this.createPlatforms();
 
