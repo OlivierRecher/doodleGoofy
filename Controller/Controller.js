@@ -102,7 +102,7 @@ class Controller {
         }
 
         /* Check if score hasn't changed for 20 seconds */
-        if (currentTime - this.lastScoreChangeTime >= 20000) {
+        if (currentTime - this.lastScoreChangeTime >= 20000 && this.autopilot !== false) {
           this.model.setGameOver(true);
         }
 
