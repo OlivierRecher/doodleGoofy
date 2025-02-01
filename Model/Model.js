@@ -212,6 +212,7 @@ class Model {
         this.matrix2,
         this.bais
       );
+      await bot.loadData();
       let direction = bot.autopilot();
       this.setDirection(direction);
     }
