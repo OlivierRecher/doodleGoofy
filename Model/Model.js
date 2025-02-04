@@ -42,7 +42,7 @@ class Model {
       );
       lastHeight -= minHeight * this.difficulty
       if(this.difficulty * 2000 < this.score && this.difficulty < 8) {
-        this.difficulty += 0.25;
+        this.difficulty += this.difficulty < 6 ? 0.5 : 0.25;
       }
     }
   }
