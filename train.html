@@ -8,13 +8,14 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
 <body>
     <div class="trainPage">
-        <!-- <textarea id="result1" style="width: 100%; height: 100px;"></textarea> -->
-        <!-- <textarea id="result2" style="width: 100%; height: 100px;"></textarea> -->
         <div class="trainTitle">
             <div class="backButton">
                 <button class="button" id="train" onclick="window.location.href='./index.html'"><</button>
             </div>
             <h2 class="title">Entrainements</h2>
+        </div>
+        <div class="trainButton">
+            <button class="button" id="saveJson">Save JSON</button>
         </div>
         <div class="chartContent">
             <div id="chart"></div>
@@ -24,12 +25,11 @@
     <script type="module">
         import { Controller } from './Controller/Controller.js';
         import { Canva } from './Model/Canva.js';
-        import { topDoodle, finalValues, historyAverage, setTopDoodle, setFinalValues } from './Model/data.js';
+        import { historyMaxValue, historyAverage, setTopDoodle, getTopDoodle, setFinalValues, getFinalValues } from './Model/data.js';
         import { drawChart } from './View/Chart.js';
         
         const results = [];
-        const result1 = document.getElementById('result1');
-        const result2 = document.getElementById('result2');
+        document.getElementById('saveJson').addEventListener('click', () => toJSon(getFinalValues()));
 
         async function initializeCanvases() {
             const canvaContentTmp = document.querySelectorAll('.canvaContent')
@@ -44,7 +44,7 @@
 
             const train = document.querySelector('.train')
 
-            for (let i = 0; i < 90; i++) {
+            for (let i = 0; i < 75; i++) {
                 const canvaContent = document.createElement('div')
                 canvaContent.classList.add('canvaContent')
                 const canvas = document.createElement('canvas');
@@ -53,14 +53,13 @@
                 canvas.height = Canva.HEIGHT;
                 canvaContent.appendChild(canvas);
                 train.appendChild(canvaContent)
-                promises.push(initializeCanvas(canvas, finalValues[i]));
+                promises.push(initializeCanvas(canvas, getFinalValues()[i]));
             }
 
             const results = await Promise.all(promises); // Exécuter toutes les instances en parallèle
             results.sort((a, b) => b.score - a.score);
             reproduction(results);
-            drawChart(historyAverage);
-            // toJSon(finalValues);
+            drawChart(historyAverage, historyMaxValue);
             initializeCanvases();
         }
 
@@ -97,18 +96,19 @@
         }
 
         function reproduction(results) {
-            setTopDoodle(results.slice(0, 30));
-            setFinalValues(topDoodle);
-            historyAverage.push(topDoodle.reduce((acc, doodle) => acc + doodle.score, 0) / topDoodle.length);
-            for (let i = 0; i < 60; i++) {
-                const parent1 = topDoodle[Math.floor(Math.random() * topDoodle.length)];
-                const parent2 = topDoodle[Math.floor(Math.random() * topDoodle.length)];
+            setTopDoodle(results.slice(0, 25));
+            setFinalValues(getTopDoodle());
+            historyMaxValue.push(getTopDoodle()[0].score);
+            historyAverage.push(getTopDoodle().reduce((acc, doodle) => acc + doodle.score, 0) / getTopDoodle().length);
+            for (let i = 0; i < 50; i++) {
+                const parent1 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
+                const parent2 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
                 const newMatrix = {
                     matrix1: averageMatrices(parent1.matrix1, parent2.matrix1),
                     matrix2: averageMatrices(parent1.matrix2, parent2.matrix2),
                     bais: parent1.bais,
                 };
-                finalValues.push(newMatrix);
+                getFinalValues().push(newMatrix);
             }
 
             function averageMatrices(matrix1, matrix2) {

@@ -1,15 +1,31 @@
 let topDoodle = [];
 
 let finalValues = [];
+const historyMaxValue = [];
 const historyAverage = [];
 
 function setTopDoodle(values) {
     topDoodle = values;
 }
 
+function getTopDoodle() {
+    return topDoodle;
+}
+
 function setFinalValues(values) {
     finalValues = values;
 }
 
-export { topDoodle, finalValues, historyAverage, setTopDoodle, setFinalValues };
+function getFinalValues() {
+    return finalValues;
+}
+
+export {
+    historyMaxValue,
+    historyAverage,
+    setTopDoodle,
+    getTopDoodle,
+    setFinalValues,
+    getFinalValues,
+};
 

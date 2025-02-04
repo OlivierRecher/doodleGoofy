@@ -1,4 +1,4 @@
-function drawChart(result) {
+function drawChart(result, scoreMax) {
     let element = document.getElementById('chart')
 
     if(element){ 
@@ -6,11 +6,11 @@ function drawChart(result) {
         google.charts.setOnLoadCallback(function() {
             if(!element || result.length === 0) return null
 
-            let columns = ["Count", "Average"]
+            let columns = ["Count", "Average", "Score Max"]
 
             let dataArray = [[...columns]]
             for (let i = 0; i < result.length; i++) {
-                dataArray.push([i+1, result[i]])
+                dataArray.push([i+1, result[i], scoreMax[i]])
             }
 
             var data = google.visualization.arrayToDataTable(dataArray);
