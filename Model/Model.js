@@ -148,6 +148,10 @@ class Model {
   }
 
   gameOver() {
+    if(this.autopilot){
+      this.setGameOver(true)
+    }
+
     this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
     this.score = 0;
     this.difficulty = 1;
@@ -190,7 +194,7 @@ class Model {
       }
       platform.display(this.platformDisplay);
       if (platform.type === 1) {
-        platform.move(this.display);
+        if(!this.isGameOver) platform.move(this.display);
       }
     }
 
