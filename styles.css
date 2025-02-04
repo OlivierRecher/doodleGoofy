@@ -85,9 +85,12 @@ body{
 }
 
 .train .canvaContent{
-    padding: 5px;
     margin: 15px;
     border: 1px solid black;
+}
+
+.train .canvaContent canvas{
+    background-image: url('assets/bck@2x.png');
 }
 
 .trainTitle{

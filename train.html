@@ -32,8 +32,14 @@
         const result2 = document.getElementById('result2');
 
         async function initializeCanvases() {
+            const canvaContentTmp = document.querySelectorAll('.canvaContent')
+            if(canvaContentTmp.length > 0) {
+                for(let i = 0 ; i < canvaContentTmp.length; i++){
+                    canvaContentTmp[i].remove()
+                }
+            }
+
             const promises = [];
-            console.log(finalValues.length);
             // const data = await loadData();
 
             const train = document.querySelector('.train')
@@ -45,7 +51,6 @@
                 canvas.id = `my_canvas_${i}`;
                 canvas.width = Canva.WIDTH;
                 canvas.height = Canva.HEIGHT;
-                canvas.style.margin = '10px';
                 canvaContent.appendChild(canvas);
                 train.appendChild(canvaContent)
                 promises.push(initializeCanvas(canvas, finalValues[i]));
