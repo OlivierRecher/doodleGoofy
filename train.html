@@ -53,6 +53,7 @@
                 canvas.height = Canva.HEIGHT;
                 canvaContent.appendChild(canvas);
                 train.appendChild(canvaContent)
+                // console.log(getFinalValues()[i]);
                 promises.push(initializeCanvas(canvas, getFinalValues()[i]));
             }
 
@@ -98,16 +99,20 @@
         function reproduction(results) {
             setTopDoodle(results.slice(0, 25));
             setFinalValues(getTopDoodle());
+            // console.log(getTopDoodle());
             historyMaxValue.push(getTopDoodle()[0].score);
             historyAverage.push(getTopDoodle().reduce((acc, doodle) => acc + doodle.score, 0) / getTopDoodle().length);
             for (let i = 0; i < 50; i++) {
                 const parent1 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
                 const parent2 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
+                //console.log(parent1, parent2);
                 const newMatrix = {
                     matrix1: averageMatrices(parent1.matrix1, parent2.matrix1),
                     matrix2: averageMatrices(parent1.matrix2, parent2.matrix2),
-                    bais: parent1.bais,
+                    bais: averageArray(parent1.bais, parent2.bais),
                 };
+                console.log(newMatrix);
+                //console.log(newMatrix);
                 getFinalValues().push(newMatrix);
             }
 
@@ -123,7 +128,9 @@
         }
 
         function mutate(value){
-            return value + (Math.random() - 0.9);
+            const delta = (Math.random() * 0.1) - 0.05;
+            const newValue = value + delta;
+            return Math.max(-1, Math.min(1, newValue));
         }
 
         initializeCanvases();

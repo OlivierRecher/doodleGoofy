@@ -21,7 +21,14 @@ class Model {
     
     this.matrix1 = data ? data.matrix1 : this.generatedRandomMatrix(4, 6);
     this.matrix2 = data ? data.matrix2 : this.generatedRandomMatrix(3, 4);
-    this.bais = data ? data.bais : this.generatedRandomMatrix(1, 4);
+    this.bais = data
+      ? data.bais
+      : [
+          Math.random() * 2 - 1,
+          Math.random() * 2 - 1,
+          Math.random() * 2 - 1,
+          Math.random() * 2 - 1,
+        ];
 
     this.createPlatforms();
 
@@ -203,6 +210,7 @@ class Model {
     if(this.platforms.length > 0 && this.platforms[this.platforms.length-1].getY() > -175) this.createPlatforms()
 
     if (this.isAutopilot()) {
+      // console.log(this.matrix1);
       let neighbors = this.getNeighbors();
       const bot = new NeuralNetwork(
         neighbors[0].distance,
