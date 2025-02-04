@@ -1,7 +1,15 @@
-const topDoodle = [];
-const listParents = [];
+let topDoodle = [];
 
-const finalValues = [];
-const historyAverage = [1025];
+let finalValues = [];
+const historyAverage = [];
 
-export { topDoodle, listParents, finalValues, historyAverage }
+function setTopDoodle(values) {
+    topDoodle = values;
+}
+
+function setFinalValues(values) {
+    finalValues = values;
+}
+
+export { topDoodle, finalValues, historyAverage, setTopDoodle, setFinalValues };
+
