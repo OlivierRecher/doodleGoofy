@@ -1,7 +1,7 @@
-function drawChart() {
-    let chartElement = document.getElementById('chart')
+function drawChart(result) {
+    let element = document.getElementById('chart')
 
-    if(chartElement){ 
+    if(element){ 
         google.charts.load("current", { "packages": ["corechart"], "language": "fr" })
         google.charts.setOnLoadCallback(function() {
             if(!element || result.length === 0) return null
@@ -34,4 +34,4 @@ function drawChart() {
     }
 }
 
-export {drawChart}
+export { drawChart }
