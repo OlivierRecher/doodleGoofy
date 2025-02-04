@@ -3,7 +3,7 @@ import { View } from "../View/View.js";
 
 class Controller {
   constructor(_assets, canvaId = "my_canvas", ai = false, data = null) {
-    this.model = new Model(data);
+    this.model = new Model(data, ai);
     this.view = new View(_assets, canvaId);
 
     this.startTime = Date.now();

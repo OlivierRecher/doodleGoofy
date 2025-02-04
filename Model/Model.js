@@ -9,13 +9,14 @@ function getRandomInt(max) {
 }
 
 class Model {
-  constructor(data = null) {
+  constructor(data = null, ai = false) {
     this.doodle = new Doodle(75, 75, Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
     this.bot = new Bot();
     this.platforms = [];
     this.score = 0;
     this.autopilot = false;
-    this.difficulty = 1;
+    this.difficulty = ai?2:1;
+    this.ai = ai;
     this.isGameOver = false;
     
     this.matrix1 = data ? data.matrix1 : this.generatedRandomMatrix(4, 6);
@@ -155,7 +156,7 @@ class Model {
 
     this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
     this.score = 0;
-    this.difficulty = 1;
+    this.difficulty = this.ai?2:1;
     this.platforms = [];
     this.createPlatforms();
   }
