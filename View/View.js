@@ -103,6 +103,9 @@ class View {
       case 2:
         this.ctx.drawImage(this.assets, 1, 55, 57, 15, x, y, 57, 15);
         break;
+      case 3:
+        this.ctx.drawImage(this.assets, 579, 330, 320, 162, x, y, Canva.WIDTH, 160);
+        break;
     }
   }
 

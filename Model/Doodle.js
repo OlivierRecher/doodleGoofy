@@ -79,7 +79,7 @@ class Doodle extends GameObject {
     }
 
     if (this.position.y + this.height > base) {
-        if (base === canvaHeight && this.getScore && this.getScore() > 0) {
+        if ((base === canvaHeight && this.getScore && this.getScore() > 0) || (platformHitted && platformHitted.type === 3)) {
             this.gameOver();
             return;
         }

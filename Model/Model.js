@@ -41,7 +41,7 @@ class Model {
     let lastHeight = lastPlatform ? lastPlatform.getY() : Canva.HEIGHT
     let minHeight = 25
     let maxHeight = -2000
-    while (lastHeight > maxHeight){
+    while (lastHeight > maxHeight && this.score < 15000){
       let rand = getRandomInt(11-this.difficulty);
       this.platforms.push(
         new Platform(57,15,getRandomInt(Canva.WIDTH - 57),lastHeight - (minHeight * this.difficulty),rand === 0 ? 2 : rand === 1 ? 1 : 0)
@@ -50,6 +50,12 @@ class Model {
       if(this.difficulty * 2000 < this.score && this.difficulty < 8) {
         this.difficulty += this.difficulty < 6 ? 0.5 : 0.25;
       }
+    }
+    if(this.score > 15000){
+      this.end = true;
+      this.platforms.push(
+        new Platform(Canva.WIDTH, 160, 0, lastHeight - (minHeight * this.difficulty) - 160, 3)
+      );    
     }
   }
 
@@ -154,11 +160,12 @@ class Model {
   }
 
   gameOver() {
+    this.end = false
     if(this.ai){
       this.setGameOver(true);
       return;
     }
-
+    
     this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
     this.score = 0;
     this.difficulty = this.ai?2:1;
@@ -205,7 +212,7 @@ class Model {
       }
     }
 
-    if(this.platforms.length > 0 && this.platforms[this.platforms.length-1].getY() > -175) this.createPlatforms()
+    if(this.platforms.length > 0 && this.platforms[this.platforms.length-1].getY() > -175 && !this.end) this.createPlatforms()
 
     if (this.isAutopilot()) {
       let neighbors = this.getNeighbors();
