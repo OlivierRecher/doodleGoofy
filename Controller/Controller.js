@@ -104,9 +104,9 @@ class Controller {
         /* Check if score hasn't changed for 20 seconds */
         if (
           currentTime - this.lastScoreChangeTime >= 20000 &&
-          this.autopilot !== false
+          this.isAutopilot()
         ) {
-          this.model.setGameOver(true);
+          this.model.gameOver();
         }
 
         requestAnimationFrame(gameLoop); // Continue the loop
