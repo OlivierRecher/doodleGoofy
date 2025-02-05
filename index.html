@@ -24,6 +24,12 @@
         canvas.width = Canva.WIDTH;
         canvas.height = Canva.HEIGHT;
 
+        async function loadData() {
+            const response = await fetch("./data.json");
+            return await response.json();
+        }
+        const data = await loadData();
+
         (function() {
             const HEXTILES_IMAGE = new Image();
             HEXTILES_IMAGE.src = 'assets/game-tiles.png';
@@ -31,7 +37,7 @@
                 new Promise( (resolve) => {HEXTILES_IMAGE.addEventListener('load', () => { resolve();}); })
             ])
             .then(() => {
-                const app = new Controller(HEXTILES_IMAGE);
+                const app = new Controller(HEXTILES_IMAGE, data);
                 app.update();
 
                 bot.addEventListener('click', () => {

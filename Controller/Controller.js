@@ -2,7 +2,7 @@ import { Model } from "../Model/Model.js";
 import { View } from "../View/View.js";
 
 class Controller {
-  constructor(_assets, canvaId = "my_canvas", ai = false, data = null) {
+  constructor(_assets, data = null, canvaId = "my_canvas", ai = false) {
     this.model = new Model(data, ai);
     this.view = new View(_assets, canvaId);
 
@@ -102,7 +102,10 @@ class Controller {
         }
 
         /* Check if score hasn't changed for 20 seconds */
-        if (currentTime - this.lastScoreChangeTime >= 20000 && this.autopilot !== false) {
+        if (
+          currentTime - this.lastScoreChangeTime >= 20000 &&
+          this.autopilot !== false
+        ) {
           this.model.setGameOver(true);
         }
 

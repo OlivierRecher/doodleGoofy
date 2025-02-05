@@ -40,8 +40,6 @@
             }
 
             const promises = [];
-            // const data = await loadData();
-
             const train = document.querySelector('.train')
 
             for (let i = 0; i < 75; i++) {
@@ -53,7 +51,6 @@
                 canvas.height = Canva.HEIGHT;
                 canvaContent.appendChild(canvas);
                 train.appendChild(canvaContent)
-                // console.log(getFinalValues()[i]);
                 promises.push(initializeCanvas(canvas, getFinalValues()[i]));
             }
 
@@ -74,15 +71,10 @@
                 });
             });
 
-            const app = new Controller(HEXTILES_IMAGE, canvas.id, true, data);
+            const app = new Controller(HEXTILES_IMAGE, data, canvas.id, true);
             const result = await app.update(); // Attendre que le jeu se termine
             results.push(result);
-            return result; // Retourner le résultat
-        }
-
-        async function loadData() {
-            const response = await fetch("./data.json");
-            return await response.json();
+            return result;
         }
 
         function toJSon(json) {
@@ -99,20 +91,16 @@
         function reproduction(results) {
             setTopDoodle(results.slice(0, 25));
             setFinalValues(getTopDoodle());
-            // console.log(getTopDoodle());
             historyMaxValue.push(getTopDoodle()[0].score);
             historyAverage.push(getTopDoodle().reduce((acc, doodle) => acc + doodle.score, 0) / getTopDoodle().length);
             for (let i = 0; i < 50; i++) {
                 const parent1 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
                 const parent2 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
-                //console.log(parent1, parent2);
                 const newMatrix = {
                     matrix1: averageMatrices(parent1.matrix1, parent2.matrix1),
                     matrix2: averageMatrices(parent1.matrix2, parent2.matrix2),
                     bais: averageArray(parent1.bais, parent2.bais),
                 };
-                console.log(newMatrix);
-                //console.log(newMatrix);
                 getFinalValues().push(newMatrix);
             }
 

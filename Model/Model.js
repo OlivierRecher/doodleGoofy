@@ -1,7 +1,6 @@
 import { Doodle } from "./Doodle.js";
 import { Platform } from "./Platform.js";
 import { Canva } from "./Canva.js";
-import { Bot } from "./Bot.js";
 import { NeuralNetwork } from "../Controller/NeuralNetwork.js";
 
 function getRandomInt(max) {
@@ -11,7 +10,6 @@ function getRandomInt(max) {
 class Model {
   constructor(data = null, ai = false) {
     this.doodle = new Doodle(75, 75, Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);
-    this.bot = new Bot();
     this.platforms = [];
     this.score = 0;
     this.autopilot = false;
@@ -210,7 +208,6 @@ class Model {
     if(this.platforms.length > 0 && this.platforms[this.platforms.length-1].getY() > -175) this.createPlatforms()
 
     if (this.isAutopilot()) {
-      // console.log(this.matrix1);
       let neighbors = this.getNeighbors();
       const bot = new NeuralNetwork(
         neighbors[0].distance,

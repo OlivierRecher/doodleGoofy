@@ -34,7 +34,6 @@ class NeuralNetwork {
                 Number(this.bais[i])
             );
         }
-        // console.log(weights);
         for (let i = 0; i < this.outputMatrix.length; i++) {
             let weight =
               this.outputMatrix[i][0] * this.ReLU(weights[0]) +
