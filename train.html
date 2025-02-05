@@ -10,7 +10,7 @@
     <div class="trainPage">
         <div class="trainTitle">
             <div class="backButton">
-                <button class="button" id="train" onclick="window.location.href='./index.html'"><</button>
+                <button class="button" onclick="window.location.href='./index.html'"><</button>
             </div>
             <h2 class="title">Entrainements</h2>
         </div>
@@ -20,13 +20,14 @@
         <div class="chartContent">
             <div id="chart"></div>
         </div>
-        <div class="train"></div>
+        <div id="trainingZone"></div>
     </div>
     <script type="module">
         import { Controller } from './Controller/Controller.js';
         import { Canva } from './Model/Canva.js';
-        import { historyMaxValue, historyAverage, setTopDoodle, getTopDoodle, setFinalValues, getFinalValues } from './Model/data.js';
+        import { historyMaxValue, historyAverage, getFinalValues } from './Model/data.js';
         import { drawChart } from './View/Chart.js';
+        import { reproduction } from './Controller/ReproductionController.js';
         
         const results = [];
         document.getElementById('saveJson').addEventListener('click', () => toJSon(getFinalValues()));
@@ -40,7 +41,7 @@
             }
 
             const promises = [];
-            const train = document.querySelector('.train')
+            const trainingZone = document.querySelector('#trainingZone')
 
             for (let i = 0; i < 75; i++) {
                 const canvaContent = document.createElement('div')
@@ -50,7 +51,7 @@
                 canvas.width = Canva.WIDTH;
                 canvas.height = Canva.HEIGHT;
                 canvaContent.appendChild(canvas);
-                train.appendChild(canvaContent)
+                trainingZone.appendChild(canvaContent)
                 promises.push(initializeCanvas(canvas, getFinalValues()[i]));
             }
 
@@ -86,39 +87,6 @@
             a.download = 'result.json';
             a.click();
             URL.revokeObjectURL(url);
-        }
-
-        function reproduction(results) {
-            setTopDoodle(results.slice(0, 25));
-            setFinalValues(getTopDoodle());
-            historyMaxValue.push(getTopDoodle()[0].score);
-            historyAverage.push(getTopDoodle().reduce((acc, doodle) => acc + doodle.score, 0) / getTopDoodle().length);
-            for (let i = 0; i < 50; i++) {
-                const parent1 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
-                const parent2 = getTopDoodle()[Math.floor(Math.random() * getTopDoodle().length)];
-                const newMatrix = {
-                    matrix1: averageMatrices(parent1.matrix1, parent2.matrix1),
-                    matrix2: averageMatrices(parent1.matrix2, parent2.matrix2),
-                    bais: averageArray(parent1.bais, parent2.bais),
-                };
-                getFinalValues().push(newMatrix);
-            }
-
-            function averageMatrices(matrix1, matrix2) {
-                return matrix1.map((row, rowIndex) =>
-                    row.map((value, colIndex) => (mutate(value + matrix2[rowIndex][colIndex]) / 2))
-                );
-            }
-
-            function averageArray(array1, array2) {
-                return array1.map((value, index) => (mutate(value + array2[index]) / 2));
-            }
-        }
-
-        function mutate(value){
-            const delta = (Math.random() * 0.1) - 0.05;
-            const newValue = value + delta;
-            return Math.max(-1, Math.min(1, newValue));
         }
 
         initializeCanvases();

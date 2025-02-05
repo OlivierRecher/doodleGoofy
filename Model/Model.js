@@ -154,9 +154,9 @@ class Model {
   }
 
   gameOver() {
-    if(this.autopilot){
-      this.setGameOver(true)
-      return
+    if(this.ai){
+      this.setGameOver(true);
+      return;
     }
 
     this.doodle.setPosition(Canva.WIDTH / 2 - 37, Canva.HEIGHT - 75);

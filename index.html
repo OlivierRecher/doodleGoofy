@@ -10,7 +10,7 @@
         <h1 class="title">Goofle</h1>
         <canvas id="my_canvas"></canvas>
         <div class="buttons">
-            <button class="button" id="bot">Autopilote</button>
+            <button class="button" id="autopilotButton">Autopilote</button>
             <button class="button" id="train" onclick="window.location.href='./train.html'">Entrainement</button>
         </div>
     </div>
@@ -19,7 +19,7 @@
         import { Controller } from './Controller/Controller.js';
         import { Canva } from './Model/Canva.js';
 
-        const bot = document.getElementById('bot');
+        const autopilotButton = document.getElementById('autopilotButton');
         const canvas = document.getElementById('my_canvas');
         canvas.width = Canva.WIDTH;
         canvas.height = Canva.HEIGHT;
@@ -40,12 +40,18 @@
                 const app = new Controller(HEXTILES_IMAGE, data);
                 app.update();
 
-                bot.addEventListener('click', () => {
+                autopilotButton.addEventListener('click', () => {
                     app.toggleAutopilot(!app.isAutopilot());
-                    bot.innerText =  app.isAutopilot() ? 'Manual' : 'AutoPilote';
+                    autopilotButton.innerText =  app.isAutopilot() ? 'Manual' : 'AutoPilote';
                 });
             });
         })();
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && app.isAutopilot()) {
+                app.restartGame();
+            }
+        });
     </script>
     
 </body>
